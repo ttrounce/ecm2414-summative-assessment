@@ -2,7 +2,7 @@ package io.github.ttrounce;
 
 public class Card {
 	
-	public int denomination;
+	public final int denomination;
 	
 	public Card(int denom)
 	{
