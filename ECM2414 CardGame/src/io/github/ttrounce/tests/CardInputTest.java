@@ -1,4 +1,4 @@
-package io.github.ttrounce;
+package io.github.ttrounce.tests;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -6,6 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+
+import io.github.ttrounce.CardGame;
 
 public class CardInputTest
 {
