@@ -1,40 +1,53 @@
-package io.github.ttrounce.tests;
+package ecm2414.cardgame.tests;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.ttrounce.CardGame;
+import ecm2414.cardgame.CardGame;
 
 public class CardInputTest
 {
 	@Test
 	void validInputTest()
 	{
-		String testInput = "1\nTests/validTestPack.txt";
-		
+		String testInput = "2\nTests/validTestPack.txt";
+		int[] packValidTest = new int[] {5, 3, 2, 7, 1, 7, 4, 8, 65, 43, 3, 385, 34, 3, 1, 2};
+
 		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
 		try
 		{
-			CardGame cardGame = new CardGame(in);
+			CardGame cardGame = new CardGame();
+			cardGame.setupInput(in);
+			
+			assertEquals(cardGame.getPlayerCount(), 2);
+			assertEquals(cardGame.getAllCards().size(), packValidTest.length);
+			for(int i = 0; i < cardGame.getAllCards().size(); i++)
+			{
+				assertEquals(cardGame.getAllCards().get(i).denomination, packValidTest[i]);
+			}
 		} catch (IOException e)
 		{
 			fail("IOException");
 		}
 	}
 	
+	//TODO: FINISH TESTS.
+
 	@Test
 	void invalidInputTypeTest()
 	{
-		String testInput = "1\nTests/invalidTestPack.txt";
-		
+		String testInput = "2\nTests/invalidTestPack.txt";
+
 		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
 		try
 		{
-			CardGame cardGame = new CardGame(in);
+			CardGame cardGame = new CardGame();
+			cardGame.setupInput(in);
 			fail("Didn't detect invalid input");
 		} catch (IOException e)
 		{
@@ -42,16 +55,17 @@ public class CardInputTest
 			// test passed.
 		}
 	}
-	
+
 	@Test
 	void invalidPackSizeTest()
 	{
 		String testInput = "1\nTests/invalidSizeTestPack.txt";
-		
+
 		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
 		try
 		{
-			CardGame cardGame = new CardGame(in);
+			CardGame cardGame = new CardGame();
+			cardGame.setupInput(in);
 			fail("Didn't detect invalid pack size");
 		} catch (IOException e)
 		{

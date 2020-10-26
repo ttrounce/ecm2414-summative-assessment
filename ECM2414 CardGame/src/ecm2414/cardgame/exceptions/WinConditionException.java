@@ -1,4 +1,4 @@
-package io.github.ttrounce.exceptions;
+package ecm2414.cardgame.exceptions;
 
 public class WinConditionException extends Exception
 {

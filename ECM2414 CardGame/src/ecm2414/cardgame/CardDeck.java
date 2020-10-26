@@ -1,49 +1,61 @@
-package io.github.ttrounce;
+package ecm2414.cardgame;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
-import io.github.ttrounce.exceptions.DeckEmptyException;
+import ecm2414.cardgame.exceptions.DeckEmptyException;
 
 public class CardDeck
 {
-	private Stack<Card> deck;
+	private Queue<Card> deck;
 	private final int deckNumber;
 	private int numberOfCards;
-	
+
 	public CardDeck(int deckNumber)
 	{
 		this.deckNumber = deckNumber;
-		this.deck = new Stack<Card>();
+		this.deck = new ArrayDeque<Card>();
 	}
-	
+
+	public Queue<Card> getDeck()
+	{
+		return deck;
+	}
+
 	public int getDeckNumber()
 	{
 		return this.deckNumber;
 	}
-	
+
 	public int getNumberOfCards()
 	{
 		return this.numberOfCards;
 	}
-	
+
 	public void addCard(Card card)
 	{
-		deck.add(card);
+		deck.offer(card);
 	}
-	
+
 	public void removeCard(Card card) throws DeckEmptyException
 	{
 		if (this.getNumberOfCards() <= 0)
 		{
 			throw new DeckEmptyException("Deck is empty - cannot take card");
 		}
-		
+
 		deck.remove(card);
 	}
-	
+
 	public Card takeCard()
 	{
-		Card card = deck.lastElement();
+		Card card = deck.remove();
 		return card;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Deck[" + deckNumber + "]";
 	}
 }
