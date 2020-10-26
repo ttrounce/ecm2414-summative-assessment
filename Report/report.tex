@@ -1,6 +1,7 @@
 \documentclass[a4paper, 11pt] {article}
 \usepackage[margin=2cm]{geometry}
 \usepackage{placeins}
+\usepackage{Float}
 \begin{document}
 \title{ECM2414 Card Game Coursework}
 \author{690037391 \& 680039372}
@@ -11,27 +12,46 @@
 	\end{center}
 \pagebreak
 \section*{Development Log}
-\FloatBarrier
-\begin{table}[]
+\begin{center}
+\begin{table}[H]
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-Date        & Time     & Duration & Roles                                   & Signature              \\ \hline
+Date           & Time     & Duration  & Roles                                                 & Signature                       \\ \hline
  26/10/2020 & 11:30    & 1hr 40m  & Driver: 680039372, Navigator: 690037391 & 680039372 \& 690037391 \\ \hline
  26/10/2020 & 13:20    & 1hr 40m  & Driver: 690037391, Navigator: 680039372 & 680039372 \& 690037391 \\ \hline
- 26/10/2020 & 15:00    &          & Driver: 680039372, Navigator: 690037391 & 680039372 \& 690037391 \\ \hline
+ 26/10/2020 & 15:00    & 2hr 00m & Driver: 680039372, Navigator: 690037391 & 680039372 \& 690037391 \\ \hline
 \end{tabular}
 \end{table}
-\pagebreak
+\end{center}
+\FloatBarrier
 \section*{Production Code Design}
 \subsection*{Preliminary User Input}
 The \texttt{CardGame} class will query the user for the initial parameters to setup the game, such as the number of players and the path to the file specifying the cards in the game. Once the system is provided with the correct information, the next phase will start.
-\subsubsection*{Number of player query}
+\subsubsection*{Number of Player Query}
 If the user doesn't enter a valid input (a positive integer), the system should explain that the input is invalid and it should ask the user for the correct input.
-\subsubsection*{Pack file query}
+\subsubsection*{Pack File Query}
 If the user doesn't enter a real path, the system should explain and ask the user to input a real path.
-Should a real file be provided, the system should check each line to see if it is a positive integer, and if not, it should explain to the user that the file they provided contains invalid cards.It should then ask the user to provide another path to a valid deck.
+Should a real file be provided, the system should check each line to see if it is a positive integer, and if not, it should explain to the user that the file they provided contains invalid cards. It should then ask the user to provide another path to a valid deck.
 
 Should all the cards in the file be valid, the system then check to see if the amount of cards found is equal to $8n$, $n$ being the number of players in the game. If it has too many or too little cards, the system should explain that to the user and ask for a new file that has the right amount of cards.
+\subsection*{\texttt{Player} Class}
+The \texttt{Player} class implements the \texttt{Runnable} interface and is represents a player as a thread. 
+The \texttt{Player} should have a public \texttt{playerNumber} (the number assigned to a player) and a private \texttt{hand} (which is a list of \texttt{Card} instances). 
+The \texttt{Player} will have 1 getter method, \texttt{getNumberOfCards()} which returns the number of cards. 
+It will also have two action methods, \texttt{addToHand(Card card)} and \texttt{discardCard(Card card)}. The former will add the card to the hand or throw a \texttt{HandFullException} if the hand is full (contains 4 cards). The latter will remove the card from the hand or throw a \texttt{HandEmptyException} if the hand is empty. 
+The predicate \texttt{hasWon()} returns a boolean depending on whether a player's hand meets the winning condition. 
+The \texttt{takeTurn(CardDeck deckLeft, CardDeck deckRight)} method combines both actions into a single atomic action, wherein a player takes a card from the left, checks if it is preferred and either adds it to their hand if it is or discards the card to their right if it does not. 
+Finally, this class overrides the \texttt{Runnable run()} method, implementing a locking system between threads (seen in the \textbf{Locking} subsection).
+
+\subsection*{CardDeck Class}
+The \texttt{CardDeck} class has a private final \texttt{deckNumber} (the number assigned to the deck) and an \texttt{ArrayDeque<Card> deck)} which is a Double ended queue of \texttt{Card} objects, allowing for insertion of a card at the end of the queue and taking of a card from the head of the queue. This class also has a getter method (\texttt{getDeckNumber()}) which returns the number of the deck. This class also has an \texttt{addCard(Card card)} and a \texttt{removeCard(Card card)} method which adds a card to the \texttt{deck} queue or remove a card from the \texttt{deck} queue respectively. Finally, this class has a \texttt{takeCard()} method which returns and removes the head of the \texttt{deck} queue, allowing for a player to take a card from the top of a deck.
+
+\subsection*{Card Class}
+
+\subsection*{Locking System}
 \pagebreak
-	\section*{Testing Design}
+\section*{Testing Design}
+\subsection*{Framework}
+We are using JUnit 5 for our unit tests and testing suite.
+
 \end{document}
