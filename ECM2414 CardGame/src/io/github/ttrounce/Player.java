@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.github.ttrounce.exceptions.HandEmptyException;
 import io.github.ttrounce.exceptions.HandFullException;
+import io.github.ttrounce.exceptions.WinConditionException;
 
 public class Player implements Runnable
 {
