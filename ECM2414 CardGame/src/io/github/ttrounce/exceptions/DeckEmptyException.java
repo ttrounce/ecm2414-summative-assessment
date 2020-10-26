@@ -1,4 +1,4 @@
-package io.github.ttrounce;
+package io.github.ttrounce.exceptions;
 
 public class DeckEmptyException extends Exception 
 {

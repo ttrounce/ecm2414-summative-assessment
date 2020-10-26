@@ -2,6 +2,8 @@ package io.github.ttrounce;
 
 import java.util.Stack;
 
+import io.github.ttrounce.exceptions.DeckEmptyException;
+
 public class CardDeck
 {
 	private Stack<Card> deck;

@@ -3,6 +3,9 @@ package io.github.ttrounce;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.ttrounce.exceptions.HandEmptyException;
+import io.github.ttrounce.exceptions.HandFullException;
+
 public class Player implements Runnable
 {
 	public static final int MAX_CARDS = 4;
@@ -21,7 +24,7 @@ public class Player implements Runnable
 		return this.numberOfCards;
 	}
 	
-	public void addToHand(Card card) throws FullHandException
+	public void addToHand(Card card) throws HandFullException
 	{
 		if (this.getNumberOfCards() < MAX_CARDS)
 		{
@@ -30,15 +33,15 @@ public class Player implements Runnable
 		}
 		else
 		{
-			throw new FullHandException("Hand is full");
+			throw new HandFullException("Hand is full");
 		}
 	}
 	
-	public void discardCard(Card card) throws EmptyHandException
+	public void discardCard(Card card) throws HandEmptyException
 	{
 		if (this.numberOfCards <= 0)
 		{
-			throw new EmptyHandException("No cards in hand");
+			throw new HandEmptyException("No cards in hand");
 		}
 		
 		hand.remove(card);
@@ -67,7 +70,7 @@ public class Player implements Runnable
 		return false;
 	}
 	
-	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws EmptyHandException, FullHandException, WinConditionException
+	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws HandEmptyException, HandFullException, WinConditionException
 	{
 		Card takenCard = deckLeft.takeCard();
 		
