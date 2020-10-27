@@ -136,7 +136,7 @@ public class CardGame
 			// pack sizes and asks the user to provide a valid pack again.
 			try
 			{
-				loadPack(file);
+				this.cards = loadPack(file, this.playerCount);
 			} catch (InvalidCardInputException e)
 			{
 				System.err.println(e.getMessage() + " - card pack is invalid, please try again.");
@@ -228,8 +228,10 @@ public class CardGame
 		}
 	}
 
-	public void loadPack(File packFile) throws IOException, InvalidCardInputException
+	public List<Card> loadPack(File packFile, int players) throws IOException, InvalidCardInputException
 	{
+		List<Card> cardList = new ArrayList<Card>();
+		
 		// BufferedReader to read pack file.
 		BufferedReader reader = new BufferedReader(new FileReader(packFile));
 
@@ -250,7 +252,7 @@ public class CardGame
 				}
 
 				// add card to list of cards.
-				cards.add(new Card(cardDenom));
+				cardList.add(new Card(cardDenom));
 
 				// increment the number of valid cards found.
 				validCards++;
@@ -265,15 +267,14 @@ public class CardGame
 		 * If the number of valid cards does not equal 8*#players, throws an exception
 		 * caught above in the call chain.
 		 */
-		if (validCards != 8 * playerCount)
+		if (validCards != 8 * players)
 		{
 			reader.close();
 			throw new InvalidCardInputException("Card packs must be 8x the number of players");
 		}
 
-		System.out.println("Valid");
-
 		reader.close();
+		return cardList;
 	}
 
 	public List<Card> getAllCards()
