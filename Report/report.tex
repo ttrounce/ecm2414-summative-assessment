@@ -24,6 +24,7 @@ Date           & Time     & Duration  & Roles                                   
  26/10/2020 & 13:20    & 1hr 40m  & Driver: 690037391, Navigator: 680039372 & 680039372 \& 690037391 \\ \hline
  26/10/2020 & 15:00    & 2hr 00m & Driver: 680039372, Navigator: 690037391 & 680039372 \& 690037391 \\ \hline
  27/10/2020 & 11:30    & 2hr 00m & Driver: 690037391, Navigator: 680039372 & 680039372 \& 690037391 \\ \hline
+ 27/10/2020 & 13:30 & 2hr 00m & Driver: 680039372, Navigator: 690037391 & 680039372 \& 690037391 \\ \hline
 \end{tabular}
 \end{table}
 \end{center}
@@ -40,7 +41,7 @@ Should a real file be provided, the system should check each line to see if it i
 
 Should all the cards in the file be valid, the system then check to see if the amount of cards found is equal to $8n$, $n$ being the number of players in the game. If it has too many or too little cards, the system should explain that to the user and ask for a new file that has the right amount of cards.
 \subsection*{\texttt{Player} Class}
-The \texttt{Player} class implements the \texttt{Runnable} interface and is represents a player as a thread. 
+The \texttt{Player} class implements the \texttt{Runnable} interface and represents a player as a thread. 
 The \texttt{Player} should have a public \texttt{playerNumber} (the number assigned to a player) and a private \texttt{hand} (which is a list of \texttt{Card} instances). 
 The \texttt{Player} will have 1 getter method, \texttt{getNumberOfCards()} which returns the number of cards. 
 It will also have two action methods, \texttt{addToHand(Card card)} and \texttt{discardCard(Card card)}. The former will add the card to the hand or throw a \texttt{HandFullException} if the hand is full (contains 4 cards). The latter will remove the card from the hand or throw a \texttt{HandEmptyException} if the hand is empty. 
