@@ -13,6 +13,7 @@ public class Player implements Runnable
 	private List<Card> hand;
 	public final int playerNumber;
 	private int numberOfCards;
+	private final String file;
 
 	public Object lock;
 
@@ -24,6 +25,7 @@ public class Player implements Runnable
 		this.cardGame = cardGame;
 		this.playerNumber = playerNumber;
 		this.hand = new ArrayList<Card>();
+		this.file = "Output/player" + this.playerNumber + "_output.txt";
 	}
 
 	public List<Card> getHand()
@@ -85,7 +87,7 @@ public class Player implements Runnable
 	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws HandEmptyException, HandFullException, WinConditionException
 	{
 		Card takenCard = deckLeft.takeCard();
-		System.out.println("    " + this + " has taken a " + takenCard + " from " + deckLeft);
+		CardGameIO.appendToFile(this.file, this + " draws a " + takenCard + " from " + deckLeft);
 
 		if (this.isPreferred(takenCard))
 		{
@@ -96,7 +98,7 @@ public class Player implements Runnable
 				{
 					this.discardCard(card);
 					deckRight.addCard(card);
-					System.out.println("    " + this + " has discarded " + card + " from their hand to " + deckRight);
+					CardGameIO.appendToFile(this.file, this + " discards a " + card + " to " + deckRight);
 					removedCard = true;
 					break;
 				}
@@ -106,13 +108,10 @@ public class Player implements Runnable
 			{
 				this.addToHand(takenCard);
 				System.out.println("[!] " + this + " has added " + takenCard + " to their hand.");
+				CardGameIO.appendToFile(this.file, this + " current hand is " + this.hand);
 			} else
 			{
-				if (this.hasWon())
-				{
-					// TODO notify threads that player has won
-					System.out.println("Player " + playerNumber + " has won!");
-				} else
+				if (!this.hasWon())
 				{
 					throw new WinConditionException("Player should have won, but hasn't");
 				}
@@ -123,11 +122,23 @@ public class Player implements Runnable
 			System.out.println("    " + this + " picked up a non-favourable card and has placed it in " + deckRight);
 		}
 	}
+	
+	private void notifyLock(Object lock)
+	{
+		synchronized (lock)
+		{
+			lock.notify();
+		}
+	}
 
 	@Override
 	public void run()
 	{
-		while (!cardGame.playerHasWon)
+		final String deckFile = "Output/deck" + this.playerNumber + "_output.txt";
+		CardGameIO.clearFile(deckFile);
+		CardGameIO.clearFile(this.file);
+		CardGameIO.appendToFile(this.file, this + " initial hand: " +  this.hand);
+		while (!cardGame.playerHasWon.get())
 		{
 
 			int previousPlayerNumber = (playerNumber - 1) - 1 % cardGame.getPlayerCount();
@@ -154,13 +165,19 @@ public class Player implements Runnable
 				e.printStackTrace();
 			}
 //			System.out.println(playerNumber + " is no longer waiting on previous lock.");
-
+			
+			if(cardGame.playerHasWon.get()) 
+			{
+				break;
+			}
+			
 			// Check if it has won before.
-			if (!cardGame.playerHasWon && this.hasWon())
+			if (!cardGame.playerHasWon.get() && this.hasWon())
 			{
 				//TODO: Implement proper win state.
 				System.out.println("Player " + playerNumber + " has won!");
-				cardGame.playerHasWon = true;
+				CardGameIO.appendToFile(this.file, this + " wins");
+				cardGame.playerHasWon.set(true);;
 				cardGame.winningPlayer = this;
 				break;
 			}
@@ -180,25 +197,25 @@ public class Player implements Runnable
 			}
 			
 			// Check if it has won after.
-			if (!cardGame.playerHasWon && this.hasWon())
+			if (!cardGame.playerHasWon.get() && this.hasWon())
 			{
 				//TODO: Implement proper win state.
 				System.out.println("Player " + playerNumber + " has won!");
-				cardGame.playerHasWon = true;
+				CardGameIO.appendToFile(this.file, this + " wins");
+				cardGame.playerHasWon.set(true);
 				cardGame.winningPlayer = this;
 				break;
 			}
-
-			synchronized (this.lock)
-			{
-//				System.out.println(playerNumber + " is locking itself...");
-				this.lock.notify();
-			}
+			this.notifyLock(this.lock);
 		}
+		CardGameIO.appendToFile(this.file, this + " exits");
+		CardGameIO.appendToFile(this.file, this + " final hand: " + this.hand);	
+		this.notifyLock(this.lock);
+		CardGameIO.appendToFile(deckFile, "deck" + this.playerNumber + " contents: " + cardGame.getCardDecks().get(this.playerNumber - 1).getDeck());
 	}
 
 	public String toString()
 	{
-		return "Player[" + this.playerNumber + "]";
+		return "player " + this.playerNumber;
 	}
 }

@@ -1,0 +1,17 @@
+player 3 initial hand: [1, 2, 3, 284]
+player 3 draws a 4 from deck 3
+player 3 draws a 83 from deck 3
+player 3 draws a 9734 from deck 3
+player 3 draws a 0 from deck 3
+player 3 draws a 4 from deck 3
+player 3 draws a 239 from deck 3
+player 3 draws a 39 from deck 3
+player 3 draws a 54 from deck 3
+player 3 draws a 30 from deck 3
+player 3 draws a 4 from deck 3
+player 3 draws a 4845 from deck 3
+player 3 draws a 435 from deck 3
+player 3 draws a 1 from deck 3
+player 3 draws a 27 from deck 3
+player 3 exits
+player 3 final hand: [1, 2, 3, 284]

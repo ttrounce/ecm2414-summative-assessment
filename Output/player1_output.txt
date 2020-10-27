@@ -1,0 +1,19 @@
+player 1 initial hand: [1, 2, 3, 29823]
+player 1 draws a 30 from deck 1
+player 1 draws a 4 from deck 1
+player 1 draws a 4845 from deck 1
+player 1 draws a 435 from deck 1
+player 1 draws a 1 from deck 1
+player 1 discards a 2 to deck 2
+player 1 current hand is [1, 3, 29823, 1]
+player 1 draws a 27 from deck 1
+player 1 draws a 93404 from deck 1
+player 1 draws a 234 from deck 1
+player 1 draws a 2 from deck 1
+player 1 draws a 83 from deck 1
+player 1 draws a 9734 from deck 1
+player 1 draws a 0 from deck 1
+player 1 draws a 3 from deck 1
+player 1 draws a 239 from deck 1
+player 1 exits
+player 1 final hand: [1, 3, 29823, 1]

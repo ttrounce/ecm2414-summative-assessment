@@ -1,0 +1,21 @@
+player 2 initial hand: [1, 2, 3, 43934]
+player 2 draws a 4 from deck 2
+player 2 draws a 239 from deck 2
+player 2 draws a 39 from deck 2
+player 2 draws a 54 from deck 2
+player 2 draws a 30 from deck 2
+player 2 draws a 4 from deck 2
+player 2 draws a 4845 from deck 2
+player 2 draws a 435 from deck 2
+player 2 draws a 2 from deck 2
+player 2 discards a 1 to deck 3
+player 2 current hand is [2, 3, 43934, 2]
+player 2 draws a 27 from deck 2
+player 2 draws a 93404 from deck 2
+player 2 draws a 234 from deck 2
+player 2 draws a 2 from deck 2
+player 2 discards a 3 to deck 3
+player 2 current hand is [2, 43934, 2, 2]
+player 2 draws a 83 from deck 2
+player 2 exits
+player 2 final hand: [2, 43934, 2, 2]

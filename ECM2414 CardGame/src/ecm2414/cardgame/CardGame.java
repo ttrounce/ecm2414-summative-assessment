@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ecm2414.cardgame.exceptions.HandFullException;
 import ecm2414.cardgame.exceptions.InvalidCardInputException;
@@ -32,7 +33,7 @@ public class CardGame
 		}
 	}
 	
-	public volatile boolean playerHasWon;
+	public volatile AtomicBoolean playerHasWon;
 	public volatile Player winningPlayer;
 
 	private List<Card> cards;
@@ -49,6 +50,7 @@ public class CardGame
 		this.players = new ArrayList<Player>();
 		this.cardDecks = new ArrayList<CardDeck>();
 		this.cards = new ArrayList<Card>();
+		this.playerHasWon = new AtomicBoolean(false);
 	}
 	
 	public void startGame(InputStream inputStream) throws IOException, NotEnoughCardsException

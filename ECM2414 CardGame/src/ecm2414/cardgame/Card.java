@@ -14,7 +14,7 @@ public class Card
 
 	public String toString()
 	{
-		return "Card(" + this.denomination + ")";
+		return "" + this.denomination;
 	}
 
 	@Override

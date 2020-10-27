@@ -1,0 +1,26 @@
+player 4 initial hand: [1, 2, 3, 96]
+player 4 draws a 4 from deck 4
+player 4 discards a 1 to deck 1
+player 4 current hand is [2, 3, 96, 4]
+player 4 draws a 27 from deck 4
+player 4 draws a 93404 from deck 4
+player 4 draws a 234 from deck 4
+player 4 draws a 4 from deck 4
+player 4 discards a 2 to deck 1
+player 4 current hand is [3, 96, 4, 4]
+player 4 draws a 83 from deck 4
+player 4 draws a 9734 from deck 4
+player 4 draws a 0 from deck 4
+player 4 draws a 4 from deck 4
+player 4 discards a 3 to deck 1
+player 4 current hand is [96, 4, 4, 4]
+player 4 draws a 239 from deck 4
+player 4 draws a 39 from deck 4
+player 4 draws a 54 from deck 4
+player 4 draws a 30 from deck 4
+player 4 draws a 4 from deck 4
+player 4 discards a 96 to deck 1
+player 4 current hand is [4, 4, 4, 4]
+player 4 wins
+player 4 exits
+player 4 final hand: [4, 4, 4, 4]

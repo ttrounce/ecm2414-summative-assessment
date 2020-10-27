@@ -56,6 +56,6 @@ public class CardDeck
 	@Override
 	public String toString()
 	{
-		return "Deck[" + deckNumber + "]";
+		return "deck " + deckNumber;
 	}
 }
