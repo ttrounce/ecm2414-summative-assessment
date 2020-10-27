@@ -85,7 +85,7 @@ public class Player implements Runnable
 	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws HandEmptyException, HandFullException, WinConditionException
 	{
 		Card takenCard = deckLeft.takeCard();
-		System.out.println(this + " has taken a " + takenCard + " from " + deckLeft);
+		System.out.println("    " + this + " has taken a " + takenCard + " from " + deckLeft);
 
 		if (this.isPreferred(takenCard))
 		{
@@ -96,7 +96,7 @@ public class Player implements Runnable
 				{
 					this.discardCard(card);
 					deckRight.addCard(card);
-					System.out.println(this + " has discarded " + card + " from their hand to " + deckRight);
+					System.out.println("    " + this + " has discarded " + card + " from their hand to " + deckRight);
 					removedCard = true;
 					break;
 				}
@@ -105,7 +105,7 @@ public class Player implements Runnable
 			if (removedCard)
 			{
 				this.addToHand(takenCard);
-				System.err.println(this + " has added " + takenCard + " to their hand.");
+				System.out.println("[!] " + this + " has added " + takenCard + " to their hand.");
 			} else
 			{
 				if (this.hasWon())
@@ -120,7 +120,7 @@ public class Player implements Runnable
 		} else
 		{
 			deckRight.addCard(takenCard);
-			System.out.println(this + " picked up a non-favourable card and has placed it in " + deckRight);
+			System.out.println("    " + this + " picked up a non-favourable card and has placed it in " + deckRight);
 		}
 	}
 
@@ -156,11 +156,12 @@ public class Player implements Runnable
 //			System.out.println(playerNumber + " is no longer waiting on previous lock.");
 
 			// Check if it has won before.
-			if (this.hasWon())
+			if (!cardGame.playerHasWon && this.hasWon())
 			{
 				//TODO: Implement proper win state.
 				System.out.println("Player " + playerNumber + " has won!");
 				cardGame.playerHasWon = true;
+				cardGame.winningPlayer = this;
 				break;
 			}
 			
@@ -179,11 +180,12 @@ public class Player implements Runnable
 			}
 			
 			// Check if it has won after.
-			if (this.hasWon())
+			if (!cardGame.playerHasWon && this.hasWon())
 			{
 				//TODO: Implement proper win state.
 				System.out.println("Player " + playerNumber + " has won!");
 				cardGame.playerHasWon = true;
+				cardGame.winningPlayer = this;
 				break;
 			}
 

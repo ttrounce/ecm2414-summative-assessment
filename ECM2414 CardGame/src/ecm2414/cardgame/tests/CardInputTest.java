@@ -109,7 +109,7 @@ public class CardInputTest
 		int testPlayers = 2;
 		try
 		{
-			List<Card> cards = cardGame.loadPack(new File("Tests/invalidTestPack.txt"), testPlayers);
+			cardGame.loadPack(new File("Tests/invalidTestPack.txt"), testPlayers);
 			fail();
 		} catch (IOException e)
 		{
@@ -127,7 +127,7 @@ public class CardInputTest
 		int testPlayers = 2;
 		try
 		{
-			List<Card> cards = cardGame.loadPack(new File("Tests/invalidSizeTestPack.txt"), testPlayers);
+			cardGame.loadPack(new File("Tests/invalidSizeTestPack.txt"), testPlayers);
 			fail();
 		} catch (IOException e)
 		{

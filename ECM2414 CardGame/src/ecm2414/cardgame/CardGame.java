@@ -32,7 +32,8 @@ public class CardGame
 		}
 	}
 	
-	public boolean playerHasWon;
+	public volatile boolean playerHasWon;
+	public volatile Player winningPlayer;
 
 	private List<Card> cards;
 	private int playerCount;
