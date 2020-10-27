@@ -16,6 +16,18 @@ import ecm2414.cardgame.exceptions.InvalidCardInputException;
 
 public class CardInputTest
 {
+	/*
+	 * TEST: CardGame.setupInput -> 2 players, valid pack.							 ==> Expected: No errors, cards should match test input.
+	 * TEST: CardGame.setupInput -> 2 players, invalid pack (non-integer text card). ==> Expected: IOException due to running out of input.
+	 * TEST: CardGame.setupInput -> 2 players, invalid pack (not enough cards). 	 ==> Expected: IOException due to running out of input.
+	 * TEST: CardGame.setupInput -> 2 players, invalid pack (too many cards).    	 ==> Expected: IOException due to running out of input.
+	 * TEST: CardGame.setupInput -> 1 player, valid pack.						     ==> Expected: IOException due to running out of input.
+	 * 
+	 * TEST: CardGame.loadPack   -> 2 players, valid pack.							 ==> Expected: No errors, cards should match test input.
+	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (non-integer text card). ==> Expected: InvalidCardInputException due to non-integer text card.
+	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (not enough cards). 	 ==> Expected: InvalidCardInputException due to not-enough text cards.
+	 */
+	
 	@Test
 	void testSetupInputValid()
 	{
@@ -64,7 +76,7 @@ public class CardInputTest
 	void testSetupInputInvalidSize()
 	{
 		String testInput = "2\nTests/invalidSizeTestPack.txt";
-
+		
 		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
 		try
 		{
