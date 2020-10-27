@@ -2,6 +2,9 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{placeins}
 \usepackage{Float}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\graphicspath{{/.}}
 \begin{document}
 \title{ECM2414 Card Game Coursework}
 \author{690037391 \& 680039372}
@@ -24,6 +27,7 @@ Date           & Time     & Duration  & Roles                                   
 \end{table}
 \end{center}
 \FloatBarrier
+\pagebreak
 \section*{Production Code Design}
 \subsection*{Preliminary User Input}
 The \texttt{CardGame} class will query the user for the initial parameters to setup the game, such as the number of players and the path to the file specifying the cards in the game. Once the system is provided with the correct information, the next phase will start.
@@ -47,8 +51,17 @@ Finally, this class overrides the \texttt{Runnable run()} method, implementing a
 The \texttt{CardDeck} class has a private final \texttt{deckNumber} (the number assigned to the deck) and an \texttt{ArrayDeque<Card> deck)} which is a Double ended queue of \texttt{Card} objects, allowing for insertion of a card at the end of the queue and taking of a card from the head of the queue. This class also has a getter method (\texttt{getDeckNumber()}) which returns the number of the deck. This class also has an \texttt{addCard(Card card)} and a \texttt{removeCard(Card card)} method which adds a card to the \texttt{deck} queue or remove a card from the \texttt{deck} queue respectively. Finally, this class has a \texttt{takeCard()} method which returns and removes the head of the \texttt{deck} queue, allowing for a player to take a card from the top of a deck.
 
 \subsection*{Card Class}
+The \texttt{Card} class represents the cards themselves and has a single \texttt{final int denomination} attribute which represents the integer denomination and has a constructor which sets the \texttt{denomination}.
 
 \subsection*{Locking System}
+\begin{wrapfigure}{r}{0.3\textwidth}
+\centering
+\includegraphics[width=0.3\textwidth]{thread_locking.png}
+\end{wrapfigure}
+
+To prevent deadlocking and other concurrency issues, a simple locking system will be put into place. In this system, all \texttt{Player} threads are created, run and then all set to wait on a lock on the previous player in the ring system (i.e. Player 1 waits on Player 4, Player 3 waits on Player 2). The main program thread in which the \texttt{CardGame} main method runs will notify the first Player, who removes their lock and which invokes their \texttt{takeTurn} method; once a player finishes their turn, they proceed to notify the next player in the ring and then lock themselves. This creates a loop around the ring of waiting, unlocking, taking turns, notifying the next player, locking and waiting for the previous player. See to the right a flowchart of the locking system.
+
+
 \pagebreak
 \section*{Testing Design}
 \subsection*{Framework}
