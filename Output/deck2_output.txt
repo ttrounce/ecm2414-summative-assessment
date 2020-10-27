@@ -1,1 +1,1 @@
-deck2 contents: [9734, 0, 3, 239]
+deck2 contents: 27 2 234 9734 83

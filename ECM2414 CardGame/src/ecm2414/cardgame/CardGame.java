@@ -6,14 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.Thread.State;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import ecm2414.cardgame.exceptions.HandFullException;
 import ecm2414.cardgame.exceptions.InvalidCardInputException;
 import ecm2414.cardgame.exceptions.NotEnoughCardsException;
+import ecm2414.cardgame.exceptions.NotEnoughPlayersException;
 
 public class CardGame
 {
@@ -26,21 +28,26 @@ public class CardGame
 			cardGame.startGame(System.in);
 		} catch (IOException e)
 		{
-			System.out.println("Error reading input.");
+			System.err.println("Error reading input.");
 		} catch (NotEnoughCardsException e)
 		{
-			System.out.println(e.getMessage());
+			System.err.println(e.getMessage());
+		} catch (NotEnoughPlayersException e)
+		{
+			System.err.println(e.getMessage());
 		}
 	}
-	
+
 	public volatile AtomicBoolean playerHasWon;
-	public volatile Player winningPlayer;
+	public volatile AtomicReference<Player> winningPlayer;
 
 	private List<Card> cards;
 	private int playerCount;
 
 	private List<Player> players;
 	private List<CardDeck> cardDecks;
+
+	private List<Thread> threads;
 
 	/*
 	 * Starts by reading the user input and then runs the card game.
@@ -50,31 +57,38 @@ public class CardGame
 		this.players = new ArrayList<Player>();
 		this.cardDecks = new ArrayList<CardDeck>();
 		this.cards = new ArrayList<Card>();
+
+		this.threads = new ArrayList<Thread>();
+
 		this.playerHasWon = new AtomicBoolean(false);
+		this.winningPlayer = new AtomicReference<Player>();
 	}
-	
-	public void startGame(InputStream inputStream) throws IOException, NotEnoughCardsException
+
+	public void startGame(InputStream inputStream) throws IOException, NotEnoughCardsException, NotEnoughPlayersException
 	{
 		setupInput(inputStream);
 		setupGame();
 		setupThreads();
 
-		try
+		boolean allThreadsWaiting = false;
+		while (!allThreadsWaiting)
 		{
-			Thread.sleep(5000);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			allThreadsWaiting = true;
+			for (Thread th : threads)
+			{
+				allThreadsWaiting = allThreadsWaiting && th.getState() == State.WAITING;
+			}
 		}
-		System.out.println();
+
+		System.out.println("Beginning game.");
 
 		synchronized (players.get(this.playerCount - 1).lock)
 		{
 			players.get(this.playerCount - 1).lock.notify();
 		}
 	}
-	
-	public void setupInput(InputStream inputStream) throws IOException
+
+	public void setupInput(InputStream inputStream) throws IOException, NotEnoughPlayersException
 	{
 		// Create a BufferedReader to read user input.
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -89,22 +103,25 @@ public class CardGame
 			try
 			{
 				String input = reader.readLine();
-				
-				if(input == null)
+
+				if (input == null)
 				{
-					//ran out of input.
+					// ran out of input.
 					throw new IOException("End of input reached");
 				}
 				this.playerCount = Integer.parseInt(input);
 				if (this.playerCount < 2)
 				{
-					throw new NumberFormatException("Player count cannot be below 2");
+					throw new NotEnoughPlayersException("Player count cannot be below 2");
 				}
 				// exit loop
 				validIntegerFound = true;
 			} catch (NumberFormatException e)
 			{
 				System.out.println("Invalid number: " + e.getMessage());
+			} catch (NotEnoughPlayersException e)
+			{
+				System.out.println("Not enough players: " + e.getMessage());
 			}
 		}
 
@@ -149,6 +166,60 @@ public class CardGame
 			inputCardsFound = true;
 		}
 		reader.close();
+	}
+
+	public List<Card> loadPack(File packFile, int players) throws IOException, InvalidCardInputException, NotEnoughPlayersException
+	{
+		if (players < 2)
+		{
+			throw new NotEnoughPlayersException("There must be 2 or more players");
+		}
+
+		List<Card> cardList = new ArrayList<Card>();
+
+		// BufferedReader to read pack file.
+		BufferedReader reader = new BufferedReader(new FileReader(packFile));
+
+		int validCards = 0;
+
+		// Read every line from the pack file.
+		String line = "";
+		while ((line = reader.readLine()) != null)
+		{
+			// Checks if the card is a valid integer, if not throws an Exception caught
+			// above in the call chain.
+			try
+			{
+				int cardDenom = Integer.parseInt(line);
+				if (cardDenom < 0)
+				{
+					throw new NumberFormatException("Card values cannot be negative");
+				}
+
+				// add card to list of cards.
+				cardList.add(new Card(cardDenom));
+
+				// increment the number of valid cards found.
+				validCards++;
+			} catch (NumberFormatException e)
+			{
+				reader.close();
+				throw new InvalidCardInputException("Cards must be non-negative integers");
+			}
+		}
+
+		/*
+		 * If the number of valid cards does not equal 8*#players, throws an exception
+		 * caught above in the call chain.
+		 */
+		if (validCards != 8 * players)
+		{
+			reader.close();
+			throw new InvalidCardInputException("Card packs must be 8x the number of players");
+		}
+
+		reader.close();
+		return cardList;
 	}
 
 	public void setupGame() throws NotEnoughCardsException
@@ -205,20 +276,10 @@ public class CardGame
 				}
 			}
 		}
-
-		players.forEach(player ->
-		{
-			System.out.println(player + " " + Arrays.deepToString(player.getHand().toArray(new Card[1])));
-		});
-		cardDecks.forEach(deck ->
-		{
-			System.out.println(deck + " " + deck.getDeck());
-		});
 	}
 
 	public void setupThreads()
 	{
-		List<Thread> threads = new ArrayList<Thread>();
 		for (Player player : players)
 		{
 			Thread thread = new Thread(player);
@@ -231,60 +292,11 @@ public class CardGame
 		}
 	}
 
-	public List<Card> loadPack(File packFile, int players) throws IOException, InvalidCardInputException
-	{
-		List<Card> cardList = new ArrayList<Card>();
-		
-		// BufferedReader to read pack file.
-		BufferedReader reader = new BufferedReader(new FileReader(packFile));
-
-		int validCards = 0;
-
-		// Read every line from the pack file.
-		String line = "";
-		while ((line = reader.readLine()) != null)
-		{
-			// Checks if the card is a valid integer, if not throws an Exception caught
-			// above in the call chain.
-			try
-			{
-				int cardDenom = Integer.parseInt(line);
-				if (cardDenom < 0)
-				{
-					throw new NumberFormatException("Card values cannot be negative");
-				}
-
-				// add card to list of cards.
-				cardList.add(new Card(cardDenom));
-
-				// increment the number of valid cards found.
-				validCards++;
-			} catch (NumberFormatException e)
-			{
-				reader.close();
-				throw new InvalidCardInputException("Cards must be non-negative integers");
-			}
-		}
-
-		/*
-		 * If the number of valid cards does not equal 8*#players, throws an exception
-		 * caught above in the call chain.
-		 */
-		if (validCards != 8 * players)
-		{
-			reader.close();
-			throw new InvalidCardInputException("Card packs must be 8x the number of players");
-		}
-
-		reader.close();
-		return cardList;
-	}
-
 	public List<Card> getAllCards()
 	{
 		return cards;
 	}
-	
+
 	public List<Player> getPlayers()
 	{
 		return players;

@@ -35,6 +35,7 @@ public class CardDeck
 	public void addCard(Card card)
 	{
 		deck.offer(card);
+		this.numberOfCards++;
 	}
 
 	public void removeCard(Card card) throws DeckEmptyException
@@ -45,11 +46,17 @@ public class CardDeck
 		}
 
 		deck.remove(card);
+		this.numberOfCards--;
 	}
 
-	public Card takeCard()
+	public Card takeCard() throws DeckEmptyException
 	{
+		if (this.getNumberOfCards() <= 0)
+		{
+			throw new DeckEmptyException("Deck is empty - cannot take card");
+		}
 		Card card = deck.remove();
+		this.numberOfCards--;
 		return card;
 	}
 

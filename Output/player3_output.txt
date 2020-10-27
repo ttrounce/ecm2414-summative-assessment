@@ -1,17 +1,59 @@
 player 3 initial hand: [1, 2, 3, 284]
 player 3 draws a 4 from deck 3
+player 3 discards a 1 to deck 4
+player 3 puts 4 into their hand
+player 3 current hand is 2 3 284 4
 player 3 draws a 83 from deck 3
+player 3 discards a 284 to deck 4
+player 3 puts 83 into their hand
+player 3 current hand is 2 3 4 83
 player 3 draws a 9734 from deck 3
+player 3 discards a 4 to deck 4
+player 3 puts 9734 into their hand
+player 3 current hand is 2 3 83 9734
 player 3 draws a 0 from deck 3
-player 3 draws a 4 from deck 3
-player 3 draws a 239 from deck 3
-player 3 draws a 39 from deck 3
-player 3 draws a 54 from deck 3
-player 3 draws a 30 from deck 3
-player 3 draws a 4 from deck 3
-player 3 draws a 4845 from deck 3
-player 3 draws a 435 from deck 3
+player 3 discards a 9734 to deck 4
+player 3 puts 0 into their hand
+player 3 current hand is 2 3 83 0
 player 3 draws a 1 from deck 3
-player 3 draws a 27 from deck 3
+player 3 discards a 83 to deck 4
+player 3 puts 1 into their hand
+player 3 current hand is 2 3 0 1
+player 3 draws a 4 from deck 3
+player 3 discards a 1 to deck 4
+player 3 puts 4 into their hand
+player 3 current hand is 2 3 0 4
+player 3 draws a 239 from deck 3
+player 3 discards a 4 to deck 4
+player 3 puts 239 into their hand
+player 3 current hand is 2 3 0 239
+player 3 draws a 43934 from deck 3
+player 3 discards a 2 to deck 4
+player 3 puts 43934 into their hand
+player 3 current hand is 3 0 239 43934
+player 3 draws a 3 from deck 3
+player 3 discards a 0 to deck 4
+player 3 puts 3 into their hand
+player 3 current hand is 3 239 43934 3
+player 3 draws a 29823 from deck 3
+player 3 discards a 239 to deck 4
+player 3 puts 29823 into their hand
+player 3 current hand is 3 43934 3 29823
+player 3 draws a 39 from deck 3
+player 3 discards a 43934 to deck 4
+player 3 puts 39 into their hand
+player 3 current hand is 3 3 29823 39
+player 3 draws a 54 from deck 3
+player 3 discards a 29823 to deck 4
+player 3 puts 54 into their hand
+player 3 current hand is 3 3 39 54
+player 3 draws a 30 from deck 3
+player 3 discards a 54 to deck 4
+player 3 puts 30 into their hand
+player 3 current hand is 3 3 39 30
+player 3 draws a 3 from deck 3
+player 3 discards a 30 to deck 4
+player 3 puts 3 into their hand
+player 3 current hand is 3 3 39 3
 player 3 exits
-player 3 final hand: [1, 2, 3, 284]
+player 3 final hand: 3 3 39 3

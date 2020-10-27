@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import ecm2414.cardgame.Card;
 import ecm2414.cardgame.CardGame;
 import ecm2414.cardgame.exceptions.InvalidCardInputException;
+import ecm2414.cardgame.exceptions.NotEnoughPlayersException;
 
 public class CardInputTest
 {
@@ -25,7 +26,9 @@ public class CardInputTest
 	 * 
 	 * TEST: CardGame.loadPack   -> 2 players, valid pack.							 ==> Expected: No errors, cards should match test input.
 	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (non-integer text card). ==> Expected: InvalidCardInputException due to non-integer text card.
-	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (not enough cards). 	 ==> Expected: InvalidCardInputException due to not-enough text cards.
+	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (not enough cards). 	 ==> Expected: InvalidCardInputException due to not enough text cards.
+	 * TEST: CardGame.loadPack   -> 2 players, invalid pack (too many cards). 		 ==> Expected: InvalidCardInputException due to too many text cards.
+	 * TEST: CardGame.loadPack   -> 1 player, valid pack					 	 	 ==> Expected: NotEnoughPlayersException due to not enough players.
 	 */
 	
 	@Test
@@ -49,6 +52,9 @@ public class CardInputTest
 		} catch (IOException e)
 		{
 			fail("IOException");
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
 		}
 	}
 	
@@ -69,9 +75,13 @@ public class CardInputTest
 		{
 			// end of input is reached, hence program didn't take invalid input
 			// test passed.
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
 		}
 	}
 
+	
 	@Test
 	void testSetupInputInvalidSize()
 	{
@@ -87,6 +97,51 @@ public class CardInputTest
 		{
 			// end of input is reached, hence program didn't take invalid input
 			// test passed.
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
+		}
+	}
+	
+	@Test
+	void testSetupInputInvalidSize2()
+	{
+		String testInput = "2\nTests/invalidSizeTestPack2.txt";
+		
+		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
+		try
+		{
+			CardGame cardGame = new CardGame();
+			cardGame.setupInput(in);
+			fail("Didn't detect invalid pack size");
+		} catch (IOException e)
+		{
+			// end of input is reached, hence program didn't take invalid input
+			// test passed.
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
+		}
+	}
+	
+	@Test
+	void testSetupInputValidOnePlayer()
+	{
+		String testInput = "1\nTests/validTestPackOnePlayer.txt";
+
+		ByteArrayInputStream in = new ByteArrayInputStream(testInput.getBytes());
+		try
+		{
+			CardGame cardGame = new CardGame();
+			cardGame.setupInput(in);
+			
+			fail();
+		} catch (IOException e)
+		{
+			// pass
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
 		}
 	}
 	
@@ -111,6 +166,9 @@ public class CardInputTest
 		} catch (InvalidCardInputException e)
 		{
 			fail("Cards should be valid - " + e.getMessage());
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
 		}
 	}
 	
@@ -129,6 +187,9 @@ public class CardInputTest
 		} catch (InvalidCardInputException e)
 		{
 			// pass
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
 		}
 	}
 	
@@ -145,6 +206,52 @@ public class CardInputTest
 		{
 			fail();
 		} catch (InvalidCardInputException e)
+		{
+			// pass
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
+		}
+	}
+	
+	@Test
+	void testLoadPackInvalidSize2()
+	{
+		CardGame cardGame = new CardGame();
+		int testPlayers = 2;
+		try
+		{
+			cardGame.loadPack(new File("Tests/invalidSizeTestPack2.txt"), testPlayers);
+			fail();
+		} catch (IOException e)
+		{
+			fail();
+		} catch (InvalidCardInputException e)
+		{
+			// pass
+		} catch (NotEnoughPlayersException e)
+		{
+			fail();
+		}
+	}
+	
+	@Test
+	void testLoadPackValidOnePlayer()
+	{
+		CardGame cardGame = new CardGame();
+		int testPlayers = 1;
+		
+		try
+		{
+			cardGame.loadPack(new File("Tests/validTestPackOnePlayer.txt"), testPlayers);
+			fail();
+		} catch (IOException e)
+		{
+			fail();
+		} catch (InvalidCardInputException e)
+		{
+			fail("Cards should be valid - " + e.getMessage());
+		} catch (NotEnoughPlayersException e)
 		{
 			// pass
 		}

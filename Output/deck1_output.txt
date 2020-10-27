@@ -1,1 +1,1 @@
-deck1 contents: [39, 54, 30, 96]
+deck1 contents: 284 2 0
