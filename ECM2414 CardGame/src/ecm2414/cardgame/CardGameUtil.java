@@ -50,7 +50,11 @@ public class CardGameUtil {
 		}
 		return sb.substring(0, sb.length() - 1).toString();
 	}
-	
+
+	/**
+	 * Notifies any thread waiting on a lock.
+	 * @param lock the object lock which threads might be waiting on.
+	 */
 	public static void notifyLock(Object lock)
 	{
 		synchronized (lock)

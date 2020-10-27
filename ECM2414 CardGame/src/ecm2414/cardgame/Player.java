@@ -162,12 +162,7 @@ public class Player implements Runnable
 //		System.out.println("    " + this + " current hand is " + CardGameUtil.listToString(this.hand));
 		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.listToString(this.hand));
 	}
-
-	/**
-	 * Notifies any thread waiting on a lock.
-	 * @param lock the object lock which threads might be waiting on.
-	 */
-
+	
 	@Override
 	public void run()
 	{
