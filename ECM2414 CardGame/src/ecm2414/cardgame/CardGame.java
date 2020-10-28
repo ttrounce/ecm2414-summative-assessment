@@ -26,9 +26,9 @@ public class CardGame
 		{
 			CardGame cardGame = new CardGame();
 			cardGame.startGame(System.in);
+			cardGame.waitForShutdown();
 		} catch (IOException e)
 		{
-			// Print that there was an error reading the input.
 			System.err.println("Error reading input.");
 		} catch (NotEnoughCardsException e)
 		{
@@ -36,9 +36,17 @@ public class CardGame
 		} catch (NotEnoughPlayersException e)
 		{
 			System.err.println(e.getMessage());
+		} catch (InterruptedException e)
+		{
+			System.err.println(e.getMessage());
 		}
 	}
 
+	/**
+	 * An atomic boolean so that each thread can atomically check if the game needs to be shutdown.
+	 */
+	public volatile AtomicBoolean shouldShutdown;
+	
 	/**
 	 * An atomic boolean so that each thread can atomically identify each other when one has won.
 	 */
@@ -67,6 +75,7 @@ public class CardGame
 
 		this.threads = new ArrayList<Thread>();
 
+		this.shouldShutdown = new AtomicBoolean(false);
 		this.playerHasWon = new AtomicBoolean(false);
 		this.winningPlayer = new AtomicReference<Player>();
 	}
@@ -101,8 +110,6 @@ public class CardGame
 				allThreadsWaiting = allThreadsWaiting && th.getState() == State.WAITING;
 			}
 		}
-
-		System.out.println("Beginning game.");
 
 		// Unlock the first player waiting on the last player.
 		synchronized (players.get(this.playerCount - 1).lock)
@@ -315,6 +322,8 @@ public class CardGame
 			}
 		}
 
+		if(index >= cards.size())
+			throw new NotEnoughCardsException("There were not enough cards in the pack to allow the game to function.");
 		/*
 		 * Start distributing cards to the decks until there are no more cards left.
 		 */
@@ -351,6 +360,26 @@ public class CardGame
 		{
 			thread.start();
 		}
+	}
+	
+	/**
+	 * Wait for all threads to finish and then join.
+	 * @throws InterruptedException 
+	 */
+	public void waitForShutdown() throws InterruptedException
+	{
+		for(Thread t : threads)
+		{
+			t.join();
+		}
+	}
+	
+	/**
+	 * Tells all threads to shutdown.
+	 */
+	public void shutdown()
+	{
+		this.shouldShutdown.set(true);
 	}
 
 	/**
