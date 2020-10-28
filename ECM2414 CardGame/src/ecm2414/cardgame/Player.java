@@ -148,7 +148,6 @@ public class Player implements Runnable
 	{
 		// Take card from the left deck.
 		Card takenCard = deckLeft.takeCard();
-//		System.out.println("    " + this + " draws a " + takenCard + " from " + deckLeft);
 		CardGameUtil.appendToFile(this.playerLogPath, this + " draws a " + takenCard + " from " + deckLeft);
 		
 		// Make a list of all non-preferred cards in the hand.
@@ -169,12 +168,10 @@ public class Player implements Runnable
 			
 			if (removedCard != null)
 			{
-//			System.out.println("    " + this + " has discards a " + takenCard + " to " + deckRight);
 				CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
 				remFromHand(removedCard);
 				deckRight.addCard(removedCard);
 				
-//			System.out.println("[!] " + this + " puts " + takenCard + " into their hand.");
 				CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
 				addToHand(takenCard);
 			}
@@ -183,7 +180,6 @@ public class Player implements Runnable
 			throw new HandEmptyException("Hand is empty");
 		}
 		
-//		System.out.println("    " + this + " current hand is " + CardGameUtil.listToString(this.hand));
 		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.collectionToString(this.hand));
 	}
 	
