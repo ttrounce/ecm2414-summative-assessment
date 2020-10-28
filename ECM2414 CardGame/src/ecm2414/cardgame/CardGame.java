@@ -19,7 +19,6 @@ import ecm2414.cardgame.exceptions.NotEnoughPlayersException;
 
 public class CardGame
 {
-
 	public static void main(String[] args)
 	{
 		try

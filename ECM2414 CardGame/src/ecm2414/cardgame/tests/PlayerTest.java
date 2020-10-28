@@ -315,7 +315,8 @@ public class PlayerTest
 	 * Simulates the game to test whether the Threaded players ever reach a
 	 * deadlock. Each thread is checked to make sure that none of them are all
 	 * waiting simultaneously, however it only tests for a certain amount of time
-	 * before concluding a passed test.
+	 * before concluding a passed test. Because of this, the test can take an
+	 * upwards of 5 seconds.
 	 */
 	@Test
 	public void testDeadLock()
