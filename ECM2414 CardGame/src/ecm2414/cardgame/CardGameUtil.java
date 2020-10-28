@@ -5,10 +5,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
+/**
+ * Utilities used by the card game, such as a basic file output and conversion functions.
+ */
 public class CardGameUtil {
 	
+	/**
+	 * Opens a file at a path and writes a line.
+	 * This function creates the file and any directories should they not exist.
+	 * @param path the path of the file to write to.
+	 * @param message the line to write to the file.
+	 */
 	public static void appendToFile(String path, String message)
 	{
 		File file = new File(path);
@@ -26,6 +34,11 @@ public class CardGameUtil {
 		}
 	}
 	
+	/**
+	 * Clears a file at a path.
+	 * This function creates the file and any directories should they not exist.
+	 * @param path the path of the file to clear.
+	 */
 	public static void clearFile(String path)
 	{
 		File file = new File(path);
@@ -40,10 +53,15 @@ public class CardGameUtil {
 		}
 	}
 	
-	public static String listToString(Collection<? extends Object> type)
+	/**
+	 * Converts a collection of Objects to a string where elements are separated by a space (" ").
+	 * @param collection the collection to turn into a string.
+	 * @return the string conversion of the collection.
+	 */
+	public static String collectionToString(Collection<? extends Object> collection)
 	{
 		StringBuilder sb = new StringBuilder();
-		for(Object obj : type)
+		for(Object obj : collection)
 		{
 			sb.append(obj);
 			sb.append(" ");

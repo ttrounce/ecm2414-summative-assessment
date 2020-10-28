@@ -28,6 +28,7 @@ public class CardGame
 			cardGame.startGame(System.in);
 		} catch (IOException e)
 		{
+			// Print that there was an error reading the input.
 			System.err.println("Error reading input.");
 		} catch (NotEnoughCardsException e)
 		{
@@ -38,7 +39,13 @@ public class CardGame
 		}
 	}
 
+	/**
+	 * An atomic boolean so that each thread can atomically identify each other when one has won.
+	 */
 	public volatile AtomicBoolean playerHasWon;
+	/**
+	 * An atomic reference to a player, set by a thread that has won.
+	 */
 	public volatile AtomicReference<Player> winningPlayer;
 
 	private List<Card> cards;
@@ -64,12 +71,27 @@ public class CardGame
 		this.winningPlayer = new AtomicReference<Player>();
 	}
 
+	/**
+	 * Starts the game by requesting inputs from the user, distributing the cards
+	 * and then creating and running the threads.
+	 * 
+	 * @param inputStream the input stream of which to read the user input.
+	 * @throws IOException               thrown when the end of input is reached.
+	 * @throws NotEnoughCardsException   thrown when there aren't enough cards in
+	 *                                   the game to function, this should not
+	 *                                   happen and would indicate a large error.
+	 * @throws NotEnoughPlayersException thrown when there aren't enough players in
+	 *                                   the game, this should not happen and would
+	 *                                   indicate the user has bypassed the initial
+	 *                                   request for 2 or more players.
+	 */
 	public void startGame(InputStream inputStream) throws IOException, NotEnoughCardsException, NotEnoughPlayersException
 	{
 		setupInput(inputStream);
 		setupGame();
 		setupThreads();
 
+		// Wait for all threads to be in a WAITING state.
 		boolean allThreadsWaiting = false;
 		while (!allThreadsWaiting)
 		{
@@ -82,12 +104,24 @@ public class CardGame
 
 		System.out.println("Beginning game.");
 
+		// Unlock the first player waiting on the last player.
 		synchronized (players.get(this.playerCount - 1).lock)
 		{
 			players.get(this.playerCount - 1).lock.notify();
 		}
 	}
 
+	/**
+	 * Requests input from the user, repeating the question is invalid input is
+	 * given.
+	 * 
+	 * @param inputStream the input stream in which to read user input.
+	 * @throws IOException               thrown when the end of input has reached.
+	 * @throws NotEnoughPlayersException thrown when there aren't enough players in
+	 *                                   the game, this should not happen and would
+	 *                                   indicate the user has bypassed the initial
+	 *                                   request for 2 or more players.
+	 */
 	public void setupInput(InputStream inputStream) throws IOException, NotEnoughPlayersException
 	{
 		// Create a BufferedReader to read user input.
@@ -110,18 +144,17 @@ public class CardGame
 					throw new IOException("End of input reached");
 				}
 				this.playerCount = Integer.parseInt(input);
+				// if there aren't enough players, repeat the question to the user.
 				if (this.playerCount < 2)
 				{
-					throw new NotEnoughPlayersException("Player count cannot be below 2");
+					System.out.println("Not enough players: there must be 2 or more.");
+					continue;
 				}
 				// exit loop
 				validIntegerFound = true;
 			} catch (NumberFormatException e)
 			{
 				System.out.println("Invalid number: " + e.getMessage());
-			} catch (NotEnoughPlayersException e)
-			{
-				System.out.println("Not enough players: " + e.getMessage());
 			}
 		}
 
@@ -168,6 +201,20 @@ public class CardGame
 		reader.close();
 	}
 
+	/**
+	 * Loads a pack file with a certain amount of players.
+	 * 
+	 * @param packFile the file in which to read the cards.
+	 * @param players  the amount of players in the game (used to validate the pack
+	 *                 file).
+	 * @return a list of valid cards read from the file.
+	 * @throws IOException               thrown if an I/O error occurs.
+	 * @throws InvalidCardInputException thrown if the pack is invalid (either there
+	 *                                   are invalid cards or there is a lack/excess
+	 *                                   of cards in the pack).
+	 * @throws NotEnoughPlayersException thrown if there are not enough players in
+	 *                                   this game.
+	 */
 	public List<Card> loadPack(File packFile, int players) throws IOException, InvalidCardInputException, NotEnoughPlayersException
 	{
 		if (players < 2)
@@ -222,8 +269,16 @@ public class CardGame
 		return cardList;
 	}
 
+	/**
+	 * Setups up the game, and distributes the cards between players and decks.
+	 * 
+	 * @throws NotEnoughCardsException thrown if there aren't enough cards in the
+	 *                                 game to play, this shouldn't happen and would
+	 *                                 suggest a large error has occurred.
+	 */
 	public void setupGame() throws NotEnoughCardsException
 	{
+		// Creates the players and decks.
 		for (int i = 0; i < this.playerCount; i++)
 		{
 			Player player = new Player(this, i + 1);
@@ -233,10 +288,11 @@ public class CardGame
 			cardDecks.add(deck);
 		}
 
+		/*
+		 * Start distributing cards until one of the player's hands are full.
+		 */
 		int index = 0;
-
 		boolean distributingPlayerCards = true;
-
 		while (distributingPlayerCards)
 		{
 			for (Player player : players)
@@ -259,8 +315,10 @@ public class CardGame
 			}
 		}
 
+		/*
+		 * Start distributing cards to the decks until there are no more cards left.
+		 */
 		boolean distributingDeckCards = true;
-
 		while (distributingDeckCards)
 		{
 
@@ -278,6 +336,9 @@ public class CardGame
 		}
 	}
 
+	/**
+	 * Create the threads and run them.
+	 */
 	public void setupThreads()
 	{
 		for (Player player : players)
@@ -292,21 +353,33 @@ public class CardGame
 		}
 	}
 
+	/**
+	 * @return a list of every card in this game, provided by the user.
+	 */
 	public List<Card> getAllCards()
 	{
 		return cards;
 	}
 
+	/**
+	 * @return a list of players in this game.
+	 */
 	public List<Player> getPlayers()
 	{
 		return players;
 	}
 
+	/**
+	 * @return the amount of players in this game.
+	 */
 	public int getPlayerCount()
 	{
 		return playerCount;
 	}
 
+	/**
+	 * @return a list of decks in this game.
+	 */
 	public List<CardDeck> getCardDecks()
 	{
 		return cardDecks;

@@ -2,6 +2,9 @@ package ecm2414.cardgame;
 
 import java.util.Arrays;
 
+/**
+ * A class representing a card with a value.
+ */
 public class Card
 {
 

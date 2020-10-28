@@ -132,12 +132,13 @@ public class Player implements Runnable
 	 */
 	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws HandEmptyException, HandFullException, DeckEmptyException
 	{
+		// Take card from the left deck.
 		Card takenCard = deckLeft.takeCard();
 //		System.out.println("    " + this + " draws a " + takenCard + " from " + deckLeft);
 		CardGameUtil.appendToFile(this.playerLogPath, this + " draws a " + takenCard + " from " + deckLeft);
-
+		
+		// Make a list of all non-preferred cards in the hand.
 		List<Card> tempCards = new ArrayList<Card>();
-
 		for (Card card : this.hand)
 		{
 			if (!this.isPreferred(card))
@@ -146,6 +147,7 @@ public class Player implements Runnable
 			}
 		}
 
+		// Choose a card index in random, then move it to the right deck, and take the card picked up from the left.
 		int cardRemoveIndex = (int) Math.floor(Math.random() * tempCards.size());
 		Card removedCard = tempCards.remove(cardRemoveIndex);
 		if (removedCard != null)
@@ -160,24 +162,30 @@ public class Player implements Runnable
 			addToHand(takenCard);
 		}
 //		System.out.println("    " + this + " current hand is " + CardGameUtil.listToString(this.hand));
-		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.listToString(this.hand));
+		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.collectionToString(this.hand));
 	}
 	
 	@Override
 	public void run()
 	{
-		// Clean the file.
-		CardGameUtil.clearFile(deckLogPath);
+		// Clean the files.
+		CardGameUtil.clearFile(this.deckLogPath);
 		CardGameUtil.clearFile(this.playerLogPath);
 		CardGameUtil.appendToFile(this.playerLogPath, this + " initial hand: " + this.hand);
 
+		/*
+		 * While there is no winners to the card game...
+		 */
 		while (!cardGame.playerHasWon.get())
 		{
-
 			int previousPlayerNumber = (playerNumber - 1) - 1 % cardGame.getPlayerCount();
 			if (previousPlayerNumber < 0)
 				previousPlayerNumber += cardGame.getPlayerCount();
 			Player previousPlayer = cardGame.getPlayers().get(previousPlayerNumber);
+			
+			/*
+			 * Wait upon the previous player's lock, the initial unlock will come from the main thread.
+			 */
 			try
 			{
 				synchronized (previousPlayer.lock)
@@ -187,15 +195,23 @@ public class Player implements Runnable
 
 			} catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				// Restart the while block, waiting again.
+				continue;
 			}
 
+			/*
+			 * If a player has won, break out of the while.
+			 */
 			if (cardGame.playerHasWon.get())
 			{
 				break;
 			}
 
-			if (!cardGame.playerHasWon.get() && this.hasWon())
+			/*
+			 * If this player has won, aka - they have 4 of the same card, append it to file and tell set the flags.
+			 * Then break out of the while loop.
+			 */
+			if (this.hasWon())
 			{
 				System.out.println("Player " + playerNumber + " has won!");
 				CardGameUtil.appendToFile(this.playerLogPath, this + " wins");
@@ -204,6 +220,12 @@ public class Player implements Runnable
 				break;
 			}
 
+			/*
+			 * Have a player take a turn, using the left-side deck and right-side deck.
+			 * If there is any hand is empty, there is a fatal error with the program.
+			 * If there is any hand that is full when trying to add the taken card, there is a fatal error.
+			 * If an entire deck is empty, there is another fatal error and the program can't continue.
+			 */
 			try
 			{
 				takeTurn(cardGame.getCardDecks().get(playerNumber - 1), cardGame.getCardDecks().get((playerNumber) % cardGame.getPlayerCount()));
@@ -228,15 +250,24 @@ public class Player implements Runnable
 				;
 				break;
 			}
+			// Notify any threads waiting on this player that it has finished.
 			CardGameUtil.notifyLock(this.lock);
 		}
+		// Notify any threads that have just exited the while loop (either because they won or another player has won) that they can continue.
 		CardGameUtil.notifyLock(this.lock);
 
+		/*
+		 * Log that this player has ended and display their final hand.
+		 * Log the deck to the left of this player.
+		 */
 		CardGameUtil.appendToFile(this.playerLogPath, this + " exits");
-		CardGameUtil.appendToFile(this.playerLogPath, this + " final hand: " + CardGameUtil.listToString(this.hand));
-		CardGameUtil.appendToFile(deckLogPath, "deck" + this.playerNumber + " contents: " + CardGameUtil.listToString(cardGame.getCardDecks().get(this.playerNumber - 1).getDeck()));
+		CardGameUtil.appendToFile(this.playerLogPath, this + " final hand: " + CardGameUtil.collectionToString(this.hand));
+		CardGameUtil.appendToFile(this.deckLogPath, "deck" + this.playerNumber + " contents: " + CardGameUtil.collectionToString(cardGame.getCardDecks().get(this.playerNumber - 1).getDeck()));
 	}
 
+	/**
+	 * Returns a String representation of this object, being that it is a "player" followed by its {@link #playerNumber}.
+	 */
 	public String toString()
 	{
 		return "player " + this.playerNumber;
