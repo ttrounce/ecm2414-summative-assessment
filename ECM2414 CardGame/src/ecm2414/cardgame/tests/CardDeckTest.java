@@ -17,14 +17,15 @@ public class CardDeckTest
 {
 
 	/**
-	 * Testing that the CardDeck constructor is correctly setting the instance's deck number.
+	 * Testing that the CardDeck constructor is correctly setting the instance's
+	 * deck number.
 	 */
 	@Test
 	public void testCardDeck()
 	{
 		int deckNum = 45;
 		CardDeck cardDeck = new CardDeck(deckNum);
-		
+
 		int resultDeckNumber = 0;
 		try
 		{
@@ -48,7 +49,7 @@ public class CardDeckTest
 
 		assertEquals(deckNum, resultDeckNumber);
 	}
-	
+
 	/**
 	 * Testing that CardDeck.getDeckNumber() returns the correct value.
 	 */
@@ -91,7 +92,8 @@ public class CardDeckTest
 	}
 
 	/**
-	 * Testing that CardDeck.removeCard(card) successfully removes a card from a deck.
+	 * Testing that CardDeck.removeCard(card) successfully removes a card from a
+	 * deck.
 	 */
 	@Test
 	public void testRemoveCard()
@@ -113,7 +115,8 @@ public class CardDeckTest
 	}
 
 	/**
-	 * Tests that CardDeck.takeCard() successfully takes the first card out of the deck and returns it.
+	 * Tests that CardDeck.takeCard() successfully takes the first card out of the
+	 * deck and returns it.
 	 */
 	@Test
 	public void testTakeCard()
@@ -146,7 +149,8 @@ public class CardDeckTest
 	}
 
 	/**
-	 * Tests that the deck successfully throws a DeckEmptyException when a card is taken/removed when it is already empty.
+	 * Tests that the deck successfully throws a DeckEmptyException when a card is
+	 * taken/removed when it is already empty.
 	 */
 	@Test
 	public void testDeckEmptyException()

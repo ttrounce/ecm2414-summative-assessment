@@ -22,11 +22,15 @@ import ecm2414.cardgame.CardGameUtil;
 public class CardGameUtilTest
 {
 	public static final String APPEND_TEST_PATH = "Tests/append_test.txt";
-	
+
+	/**
+	 * Tests the CardGameUtil.clearFile(path) function, which should set a file to
+	 * be empty (or create an empty file).
+	 */
 	@Test
 	public void testClearFile()
 	{
-		try(BufferedWriter writer = new BufferedWriter(new FileWriter(APPEND_TEST_PATH)))
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(APPEND_TEST_PATH)))
 		{
 			writer.write("Junk String");
 			writer.newLine();
@@ -40,24 +44,28 @@ public class CardGameUtilTest
 		}
 
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
-		
+
 		File file = new File(APPEND_TEST_PATH);
-		if(file.length() != 0)
+		if (file.length() != 0)
 		{
 			fail();
 		}
 	}
-	
+
+	/**
+	 * Tests the CardGameUtil.appendToFile(path) function, which should append a
+	 * line to the file (and create the file if it doesn't exist).
+	 */
 	@Test
 	public void testAppendToFileOnce()
 	{
 		// Clean file before test.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
-		
-		String testMessage = "test";		
+
+		String testMessage = "test";
 		CardGameUtil.appendToFile(APPEND_TEST_PATH, testMessage);
-		
-		try(BufferedReader reader = new BufferedReader(new FileReader(APPEND_TEST_PATH)))
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(APPEND_TEST_PATH)))
 		{
 			String line = reader.readLine();
 			assertTrue(line.equals(testMessage));
@@ -68,23 +76,27 @@ public class CardGameUtilTest
 		{
 			fail();
 		}
-		
+
 		// Clean again.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
 	}
-	
+
+	/**
+	 * Tests the CardGameUtil.appendToFile(path) function, however tests the ability
+	 * to write multiple lines in a row.
+	 */
 	@Test
 	public void testAppendToFileTwice()
 	{
 		// Clean file before test.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
-		
-		String testMessage = "test";	
+
+		String testMessage = "test";
 		String testMessage2 = "test2";
 		CardGameUtil.appendToFile(APPEND_TEST_PATH, testMessage);
 		CardGameUtil.appendToFile(APPEND_TEST_PATH, testMessage2);
 
-		try(BufferedReader reader = new BufferedReader(new FileReader(APPEND_TEST_PATH)))
+		try (BufferedReader reader = new BufferedReader(new FileReader(APPEND_TEST_PATH)))
 		{
 			String line = reader.readLine();
 			String line2 = reader.readLine();
@@ -97,41 +109,55 @@ public class CardGameUtilTest
 		{
 			fail();
 		}
-		
+
 		// Clean again.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
 	}
-	
+
+	/**
+	 * Tests the CardGameUtil.collectionToString which should convert a collection
+	 * of objects into their string representation separated by " ".
+	 */
 	@Test
 	public void testCollectionToString()
 	{
-		List<Card> testCards = Arrays.asList(new Card[] {new Card(2), new Card(5), new Card(0), new Card(1), new Card(3)}); 
+		List<Card> testCards = Arrays.asList(new Card[] { new Card(2), new Card(5), new Card(0), new Card(1), new Card(3) });
 		String expectedString = "2 5 0 1 3";
 		String resultString = CardGameUtil.collectionToString(testCards);
-		
+
 		assertTrue(expectedString.equals(resultString));
 	}
-	
+
+	/**
+	 * Tests the CardGameUtil.collectionToString which should convert an empty
+	 * collection of objects into an empty string (since its empty).
+	 */
 	@Test
 	public void testCollectionToStringEmpty()
 	{
-		List<Card> testCards = Arrays.asList(new Card[] {}); 
+		List<Card> testCards = Arrays.asList(new Card[] {});
 		String expectedString = "";
 		String resultString = CardGameUtil.collectionToString(testCards);
-		
+
 		assertTrue(expectedString.equals(resultString));
 	}
-	
+
+	/**
+	 * Test that the CardGameUtil.notifyLock(lock) function successfully notify
+	 * threads waiting on a lock.
+	 */
 	@Test
 	public void testNotifyLock()
 	{
 		Object lock = new Object();
-				
-		// The time that the test will wait for threads to reach WAITING/TERMINATED states.
+
+		// The time that the test will wait for threads to reach WAITING/TERMINATED
+		// states.
 		final long timeout = 3000;
-		
-		Thread thread = new Thread(() -> {
-			synchronized(lock)
+
+		Thread thread = new Thread(() ->
+		{
+			synchronized (lock)
 			{
 				try
 				{
@@ -139,34 +165,34 @@ public class CardGameUtilTest
 				} catch (InterruptedException e)
 				{
 					fail();
-				}				
+				}
 			}
 		});
-		
+
 		thread.start();
-		
+
 		long time0 = System.currentTimeMillis();
-		while(thread.getState() != State.WAITING)
+		while (thread.getState() != State.WAITING)
 		{
 			/*
 			 * If the thread takes too long to become waiting, fail the test.
 			 */
-			if(System.currentTimeMillis() - time0 >= timeout)
+			if (System.currentTimeMillis() - time0 >= timeout)
 			{
 				fail();
 				return;
 			}
 		}
-		
+
 		CardGameUtil.notifyLock(lock);
-		
+
 		time0 = System.currentTimeMillis();
-		while(thread.getState() != State.TERMINATED)
+		while (thread.getState() != State.TERMINATED)
 		{
 			/*
 			 * If the thread takes too long to become waiting, fail the test.
 			 */
-			if(System.currentTimeMillis() - time0 >= timeout)
+			if (System.currentTimeMillis() - time0 >= timeout)
 			{
 				fail();
 			}

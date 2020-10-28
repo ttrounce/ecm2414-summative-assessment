@@ -21,32 +21,51 @@ import ecm2414.cardgame.exceptions.NotEnoughPlayersException;
 public class CardGameTest
 {
 
+	/**
+	 * Tests the CardGame constructor, and tests that each field is initialised.
+	 */
 	@Test
-	public void testCardGame() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
+	public void testCardGame()
 	{
 		CardGame cardGame = new CardGame();
 
-		Field playersField = CardGame.class.getDeclaredField("players");
-		playersField.setAccessible(true);
-		assertTrue(playersField.get(cardGame) != null);
+		try
+		{
+			Field playersField = CardGame.class.getDeclaredField("players");
+			playersField.setAccessible(true);
+			assertTrue(playersField.get(cardGame) != null);
 
-		Field cardDecksField = CardGame.class.getDeclaredField("cardDecks");
-		cardDecksField.setAccessible(true);
-		assertTrue(cardDecksField.get(cardGame) != null);
+			Field cardDecksField = CardGame.class.getDeclaredField("cardDecks");
+			cardDecksField.setAccessible(true);
+			assertTrue(cardDecksField.get(cardGame) != null);
 
-		Field cardsField = CardGame.class.getDeclaredField("cards");
-		cardsField.setAccessible(true);
-		assertTrue(cardsField.get(cardGame) != null);
+			Field cardsField = CardGame.class.getDeclaredField("cards");
+			cardsField.setAccessible(true);
+			assertTrue(cardsField.get(cardGame) != null);
 
-		Field threadsField = CardGame.class.getDeclaredField("threads");
-		threadsField.setAccessible(true);
-		assertTrue(threadsField.get(cardGame) != null);
+			Field threadsField = CardGame.class.getDeclaredField("threads");
+			threadsField.setAccessible(true);
+			assertTrue(threadsField.get(cardGame) != null);
+		} catch (IllegalAccessException e)
+		{
+			fail();
+		} catch (NoSuchFieldException e)
+		{
+			fail();
+		} catch (SecurityException e)
+		{
+			fail();
+		}
 
 		assertTrue(cardGame.shouldShutdown != null && cardGame.shouldShutdown.get() == false);
 		assertTrue(cardGame.playerHasWon != null && cardGame.playerHasWon.get() == false);
 		assertTrue(cardGame.winningPlayer != null);
 	}
 
+	/**
+	 * Tests that the CardGame.waitForShutdown() works by rejoining all of the
+	 * CardGame Player threads together.
+	 */
 	@Test
 	public void testWaitForShutdown()
 	{
@@ -76,6 +95,11 @@ public class CardGameTest
 		}
 	}
 
+	/**
+	 * Tests the CardGame.setupGame() function, by making sure that each player and
+	 * card deck has been initialised, and that the cards have been distributed
+	 * among them.
+	 */
 	@Test
 	public void testSetupGame()
 	{
@@ -93,6 +117,10 @@ public class CardGameTest
 			List<Player> players = new ArrayList<Player>();
 			try
 			{
+				/*
+				 * Using reflection to get the List of players, then loading each one into the
+				 * new list.
+				 */
 				Field playersField = CardGame.class.getDeclaredField("players");
 				playersField.setAccessible(true);
 				Object fieldResult = playersField.get(cardGame);
@@ -118,13 +146,24 @@ public class CardGameTest
 			{
 				fail("Internal error");
 			}
+			/*
+			 * Check that there are 4 players as expected and that their hand is not empty.
+			 */
 			assertEquals(players.size(), 4);
+			for (Player player : players)
+			{
+				assertTrue(!player.getHand().isEmpty());
+			}
 
 			// card deck assert
 
 			List<CardDeck> cardDecks = new ArrayList<CardDeck>();
 			try
 			{
+				/*
+				 * Using reflection to get the CardDecks, and add each one to the local list of
+				 * CardDecks to test.
+				 */
 				Field cardDecksField = CardGame.class.getDeclaredField("cardDecks");
 				cardDecksField.setAccessible(true);
 				Object fieldResult = cardDecksField.get(cardGame);
@@ -150,7 +189,14 @@ public class CardGameTest
 			{
 				fail("Internal error");
 			}
+			/*
+			 * Check that there are 4 card decks and that they're not empty.
+			 */
 			assertEquals(cardDecks.size(), 4);
+			for (CardDeck deck : cardDecks)
+			{
+				assertTrue(!deck.getDeck().isEmpty());
+			}
 		} catch (IOException e)
 		{
 			fail();

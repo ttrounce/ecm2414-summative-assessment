@@ -1,0 +1,79 @@
+player 2 initial hand: [1, 2, 3, 43934]
+player 2 draws a 4 from deck 2
+player 2 discards a 43934 to deck 3
+player 2 puts 4 into their hand
+player 2 current hand is 1 2 3 4
+player 2 draws a 239 from deck 2
+player 2 discards a 3 to deck 3
+player 2 puts 239 into their hand
+player 2 current hand is 1 2 4 239
+player 2 draws a 39 from deck 2
+player 2 discards a 4 to deck 3
+player 2 puts 39 into their hand
+player 2 current hand is 1 2 239 39
+player 2 draws a 54 from deck 2
+player 2 discards a 39 to deck 3
+player 2 puts 54 into their hand
+player 2 current hand is 1 2 239 54
+player 2 draws a 2 from deck 2
+player 2 discards a 54 to deck 3
+player 2 puts 2 into their hand
+player 2 current hand is 1 2 239 2
+player 2 draws a 30 from deck 2
+player 2 discards a 1 to deck 3
+player 2 puts 30 into their hand
+player 2 current hand is 2 239 2 30
+player 2 draws a 29823 from deck 2
+player 2 discards a 30 to deck 3
+player 2 puts 29823 into their hand
+player 2 current hand is 2 239 2 29823
+player 2 draws a 3 from deck 2
+player 2 discards a 239 to deck 3
+player 2 puts 3 into their hand
+player 2 current hand is 2 2 29823 3
+player 2 draws a 4 from deck 2
+player 2 discards a 3 to deck 3
+player 2 puts 4 into their hand
+player 2 current hand is 2 2 29823 4
+player 2 draws a 4845 from deck 2
+player 2 discards a 4 to deck 3
+player 2 puts 4845 into their hand
+player 2 current hand is 2 2 29823 4845
+player 2 draws a 435 from deck 2
+player 2 discards a 4845 to deck 3
+player 2 puts 435 into their hand
+player 2 current hand is 2 2 29823 435
+player 2 draws a 96 from deck 2
+player 2 discards a 29823 to deck 3
+player 2 puts 96 into their hand
+player 2 current hand is 2 2 435 96
+player 2 draws a 27 from deck 2
+player 2 discards a 96 to deck 3
+player 2 puts 27 into their hand
+player 2 current hand is 2 2 435 27
+player 2 draws a 3 from deck 2
+player 2 discards a 27 to deck 3
+player 2 puts 3 into their hand
+player 2 current hand is 2 2 435 3
+player 2 draws a 93404 from deck 2
+player 2 discards a 3 to deck 3
+player 2 puts 93404 into their hand
+player 2 current hand is 2 2 435 93404
+player 2 draws a 2 from deck 2
+player 2 discards a 93404 to deck 3
+player 2 puts 2 into their hand
+player 2 current hand is 2 2 435 2
+player 2 draws a 234 from deck 2
+player 2 discards a 435 to deck 3
+player 2 puts 234 into their hand
+player 2 current hand is 2 2 2 234
+player 2 draws a 284 from deck 2
+player 2 discards a 234 to deck 3
+player 2 puts 284 into their hand
+player 2 current hand is 2 2 2 284
+player 2 draws a 83 from deck 2
+player 2 discards a 284 to deck 3
+player 2 puts 83 into their hand
+player 2 current hand is 2 2 2 83
+player 2 exits
+player 2 final hand: 2 2 2 83

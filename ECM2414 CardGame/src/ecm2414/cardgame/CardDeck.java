@@ -46,6 +46,7 @@ public class CardDeck
 
 	/**
 	 * Adds a card to the end of the queue deck.
+	 * 
 	 * @param card card to add.
 	 */
 	public void addCard(Card card)
@@ -56,6 +57,7 @@ public class CardDeck
 
 	/**
 	 * Removes a specified card from the deck.
+	 * 
 	 * @param card card to remove.
 	 * @throws DeckEmptyException thrown when the deck is empty.
 	 */
@@ -72,6 +74,7 @@ public class CardDeck
 
 	/**
 	 * Removes the first card in the queue (deck).
+	 * 
 	 * @return the card at the front of the deck.
 	 * @throws DeckEmptyException thrown when the deck is empty.
 	 */

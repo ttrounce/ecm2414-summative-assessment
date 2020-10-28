@@ -15,6 +15,7 @@ public class Card
 		this.denomination = denom;
 	}
 
+	@Override
 	public String toString()
 	{
 		return "" + this.denomination;

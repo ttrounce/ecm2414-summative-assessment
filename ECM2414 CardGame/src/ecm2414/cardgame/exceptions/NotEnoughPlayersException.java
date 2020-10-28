@@ -7,7 +7,7 @@ package ecm2414.cardgame.exceptions;
 @SuppressWarnings("serial")
 public class NotEnoughPlayersException extends Exception
 {
-	
+
 	public NotEnoughPlayersException(String message)
 	{
 		super(message);

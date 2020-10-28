@@ -32,9 +32,10 @@ public class Player implements Runnable
 		this.playerLogPath = "Output/player" + this.playerNumber + "_output.txt";
 		this.deckLogPath = "Output/deck" + this.playerNumber + "_output.txt";
 	}
-	
+
 	/**
-	 * Constructor used for testing purposes - prevents tests from flooding Output directory.
+	 * Constructor used for testing purposes - prevents tests from flooding Output
+	 * directory.
 	 */
 	public Player(CardGame cardGame, int playerNumber, String playerLogPath, String deckLogPath)
 	{
@@ -64,9 +65,12 @@ public class Player implements Runnable
 	}
 
 	/**
-	 * Adds a card to the player's hand, non-synchronised as it is only used on a singular thread.
+	 * Adds a card to the player's hand, non-synchronised as it is only used on a
+	 * singular thread.
+	 * 
 	 * @param card the card which the player wants to add.
-	 * @throws HandFullException when the hand is already at a full capacity of {@value #MAX_CARDS}.
+	 * @throws HandFullException when the hand is already at a full capacity of
+	 *                           {@value #MAX_CARDS}.
 	 */
 	public void addToHand(Card card) throws HandFullException
 	{
@@ -81,7 +85,9 @@ public class Player implements Runnable
 	}
 
 	/**
-	 * Removes a card from the player's hand, non-synchronised as it is only used on a singular thread.
+	 * Removes a card from the player's hand, non-synchronised as it is only used on
+	 * a singular thread.
+	 * 
 	 * @param card the card which the player wants to remove.
 	 * @throws HandEmptyException when the hand is already empty.
 	 */
@@ -98,6 +104,7 @@ public class Player implements Runnable
 
 	/**
 	 * Checks a card to see if it's value is preferred by the player.
+	 * 
 	 * @param card the card to check
 	 * @return whether the card is preferred by the player.
 	 */
@@ -108,6 +115,7 @@ public class Player implements Runnable
 
 	/**
 	 * Checks every card in the player's hand to see if they have won.
+	 * 
 	 * @return whether the player has won (has a full deck of the same card).
 	 */
 	public boolean hasWon()
@@ -115,16 +123,15 @@ public class Player implements Runnable
 		if (this.getNumberOfCards() == MAX_CARDS)
 		{
 			int lastCardValue = Integer.MIN_VALUE;
-			
+
 			for (Card card : this.hand)
 			{
-				if(lastCardValue == Integer.MIN_VALUE)
+				if (lastCardValue == Integer.MIN_VALUE)
 				{
 					lastCardValue = card.denomination;
-				}
-				else
+				} else
 				{
-					if(lastCardValue != card.denomination)
+					if (lastCardValue != card.denomination)
 					{
 						return false;
 					}
@@ -136,20 +143,25 @@ public class Player implements Runnable
 	}
 
 	/**
-	 * Makes a player take their turn, picking up a card from the left deck, discarding a card in their hand and replacing
-	 * it with the card they just picked up. The discarded card gets placed in the right deck.
-	 * @param deckLeft the deck the player takes from.
+	 * Makes a player take their turn, picking up a card from the left deck,
+	 * discarding a card in their hand and replacing it with the card they just
+	 * picked up. The discarded card gets placed in the right deck.
+	 * 
+	 * @param deckLeft  the deck the player takes from.
 	 * @param deckRight the deck the player discards to.
-	 * @throws HandEmptyException thrown when their hand is empty so no cards can be taken from it.
-	 * @throws HandFullException thrown when their hand is full so no more cards can be placed in it.
-	 * @throws DeckEmptyException thrown when the deck to their left is empty so no card can be taken from it.
+	 * @throws HandEmptyException thrown when their hand is empty so no cards can be
+	 *                            taken from it.
+	 * @throws HandFullException  thrown when their hand is full so no more cards
+	 *                            can be placed in it.
+	 * @throws DeckEmptyException thrown when the deck to their left is empty so no
+	 *                            card can be taken from it.
 	 */
 	public void takeTurn(CardDeck deckLeft, CardDeck deckRight) throws HandEmptyException, HandFullException, DeckEmptyException
 	{
 		// Take card from the left deck.
 		Card takenCard = deckLeft.takeCard();
 		CardGameUtil.appendToFile(this.playerLogPath, this + " draws a " + takenCard + " from " + deckLeft);
-		
+
 		// Make a list of all non-preferred cards in the hand.
 		List<Card> tempCards = new ArrayList<Card>();
 		for (Card card : this.hand)
@@ -160,18 +172,19 @@ public class Player implements Runnable
 			}
 		}
 
-		// Choose a card index in random, then move it to the right deck, and take the card picked up from the left.
+		// Choose a card index in random, then move it to the right deck, and take the
+		// card picked up from the left.
 		int cardRemoveIndex = (int) Math.floor(Math.random() * tempCards.size());
-		try 
+		try
 		{
 			Card removedCard = tempCards.remove(cardRemoveIndex);
-			
+
 			if (removedCard != null)
 			{
 				CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
 				remFromHand(removedCard);
 				deckRight.addCard(removedCard);
-				
+
 				CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
 				addToHand(takenCard);
 			}
@@ -179,10 +192,10 @@ public class Player implements Runnable
 		{
 			throw new HandEmptyException("Hand is empty");
 		}
-		
+
 		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.collectionToString(this.hand));
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -200,9 +213,10 @@ public class Player implements Runnable
 			if (previousPlayerNumber < 0)
 				previousPlayerNumber += cardGame.getPlayerCount();
 			Player previousPlayer = cardGame.getPlayers().get(previousPlayerNumber);
-			
+
 			/*
-			 * Wait upon the previous player's lock, the initial unlock will come from the main thread.
+			 * Wait upon the previous player's lock, the initial unlock will come from the
+			 * main thread.
 			 */
 			try
 			{
@@ -227,8 +241,8 @@ public class Player implements Runnable
 			}
 
 			/*
-			 * If this player has won, aka - they have 4 of the same card, append it to file and tell set the flags.
-			 * Then break out of the while loop.
+			 * If this player has won, aka - they have 4 of the same card, append it to file
+			 * and tell set the flags. Then break out of the while loop.
 			 */
 			if (this.hasWon())
 			{
@@ -240,10 +254,11 @@ public class Player implements Runnable
 			}
 
 			/*
-			 * Have a player take a turn, using the left-side deck and right-side deck.
-			 * If there is any hand is empty, there is a fatal error with the program.
-			 * If there is any hand that is full when trying to add the taken card, there is a fatal error.
-			 * If an entire deck is empty, there is another fatal error and the program can't continue.
+			 * Have a player take a turn, using the left-side deck and right-side deck. If
+			 * there is any hand is empty, there is a fatal error with the program. If there
+			 * is any hand that is full when trying to add the taken card, there is a fatal
+			 * error. If an entire deck is empty, there is another fatal error and the
+			 * program can't continue.
 			 */
 			try
 			{
@@ -271,13 +286,14 @@ public class Player implements Runnable
 			// Notify any threads waiting on this player that it has finished.
 			CardGameUtil.notifyLock(this.lock);
 		}
-		
-		// Notify any threads that have just exited the while loop (either because they won or another player has won) that they can continue.
+
+		// Notify any threads that have just exited the while loop (either because they
+		// won or another player has won) that they can continue.
 		CardGameUtil.notifyLock(this.lock);
 
 		/*
-		 * Log that this player has ended and display their final hand.
-		 * Log the deck to the left of this player.
+		 * Log that this player has ended and display their final hand. Log the deck to
+		 * the left of this player.
 		 */
 		CardGameUtil.appendToFile(this.playerLogPath, this + " exits");
 		CardGameUtil.appendToFile(this.playerLogPath, this + " final hand: " + CardGameUtil.collectionToString(this.hand));
@@ -285,8 +301,10 @@ public class Player implements Runnable
 	}
 
 	/**
-	 * Returns a String representation of this object, being that it is a "player" followed by its {@link #playerNumber}.
+	 * Returns a String representation of this object, being that it is a "player"
+	 * followed by its {@link #playerNumber}.
 	 */
+	@Override
 	public String toString()
 	{
 		return "player " + this.playerNumber;

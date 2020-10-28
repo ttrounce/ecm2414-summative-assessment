@@ -43,12 +43,14 @@ public class CardGame
 	}
 
 	/**
-	 * An atomic boolean so that each thread can atomically check if the game needs to be shutdown.
+	 * An atomic boolean so that each thread can atomically check if the game needs
+	 * to be shutdown.
 	 */
 	public volatile AtomicBoolean shouldShutdown;
-	
+
 	/**
-	 * An atomic boolean so that each thread can atomically identify each other when one has won.
+	 * An atomic boolean so that each thread can atomically identify each other when
+	 * one has won.
 	 */
 	public volatile AtomicBoolean playerHasWon;
 	/**
@@ -322,7 +324,7 @@ public class CardGame
 			}
 		}
 
-		if(index >= cards.size())
+		if (index >= cards.size())
 			throw new NotEnoughCardsException("There were not enough cards in the pack to allow the game to function.");
 		/*
 		 * Start distributing cards to the decks until there are no more cards left.
@@ -361,19 +363,20 @@ public class CardGame
 			thread.start();
 		}
 	}
-	
+
 	/**
 	 * Wait for all threads to finish and then join.
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	public void waitForShutdown() throws InterruptedException
 	{
-		for(Thread t : threads)
+		for (Thread t : threads)
 		{
 			t.join();
 		}
 	}
-	
+
 	/**
 	 * Tells all threads to shutdown.
 	 */
