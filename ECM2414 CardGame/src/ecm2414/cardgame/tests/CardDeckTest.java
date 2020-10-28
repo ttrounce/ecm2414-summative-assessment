@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Field;
+
 import org.junit.Test;
 
 import ecm2414.cardgame.Card;
@@ -14,8 +16,44 @@ import ecm2414.cardgame.exceptions.DeckEmptyException;
 public class CardDeckTest
 {
 
+	/**
+	 * Testing that the CardDeck constructor is correctly setting the instance's deck number.
+	 */
 	@Test
 	public void testCardDeck()
+	{
+		int deckNum = 45;
+		CardDeck cardDeck = new CardDeck(deckNum);
+		
+		int resultDeckNumber = 0;
+		try
+		{
+			// Retrieving the deckNumber, a private field.
+			Field deckNumberField = CardDeck.class.getDeclaredField("deckNumber");
+			deckNumberField.setAccessible(true);
+			resultDeckNumber = (int) deckNumberField.get(cardDeck);
+		} catch (NoSuchFieldException e)
+		{
+			fail();
+		} catch (SecurityException e)
+		{
+			fail();
+		} catch (IllegalArgumentException e)
+		{
+			fail();
+		} catch (IllegalAccessException e)
+		{
+			fail();
+		}
+
+		assertEquals(deckNum, resultDeckNumber);
+	}
+	
+	/**
+	 * Testing that CardDeck.getDeckNumber() returns the correct value.
+	 */
+	@Test
+	public void testGetDeckNumber()
 	{
 		int deckNum = 45;
 		CardDeck cardDeck = new CardDeck(deckNum);
@@ -23,15 +61,23 @@ public class CardDeckTest
 		assertEquals(deckNum, cardDeck.getDeckNumber());
 	}
 
+	/**
+	 * Testing that CardDeck.getDeck() returns a queue of cards.
+	 */
 	@Test
 	public void testGetDeck()
 	{
 		int deckNum = 1;
 		CardDeck cardDeck = new CardDeck(deckNum);
+		cardDeck.addCard(new Card(1));
 
-		assertTrue(cardDeck.getDeck() != null && cardDeck.getDeck().isEmpty());
+		assertTrue(cardDeck.getDeck() != null);
+		assertEquals(cardDeck.getDeck().size(), 1);
 	}
 
+	/**
+	 * Testing that CardDeck.addCard(card) successfully adds a card to a deck.
+	 */
 	@Test
 	public void testAddCard()
 	{
@@ -44,6 +90,9 @@ public class CardDeckTest
 		assertEquals(cardDeck.getDeck().size(), 1);
 	}
 
+	/**
+	 * Testing that CardDeck.removeCard(card) successfully removes a card from a deck.
+	 */
 	@Test
 	public void testRemoveCard()
 	{
@@ -63,6 +112,9 @@ public class CardDeckTest
 		assertEquals(cardDeck.getDeck().size(), 0);
 	}
 
+	/**
+	 * Tests that CardDeck.takeCard() successfully takes the first card out of the deck and returns it.
+	 */
 	@Test
 	public void testTakeCard()
 	{
@@ -86,13 +138,16 @@ public class CardDeckTest
 			fail();
 		}
 
-		assertEquals(card, takenCard);
+		assertEquals(takenCard, card);
 		assertEquals(cardDeck.getDeck().size(), 3);
 		assertNotEquals(takenCard, card2);
 		assertNotEquals(takenCard, card3);
 		assertNotEquals(takenCard, card4);
 	}
 
+	/**
+	 * Tests that the deck successfully throws a DeckEmptyException when a card is taken/removed when it is already empty.
+	 */
 	@Test
 	public void testDeckEmptyException()
 	{
