@@ -32,6 +32,20 @@ public class Player implements Runnable
 		this.playerLogPath = "Output/player" + this.playerNumber + "_output.txt";
 		this.deckLogPath = "Output/deck" + this.playerNumber + "_output.txt";
 	}
+	
+	/**
+	 * Constructor used for testing purposes - prevents tests from flooding Output directory.
+	 */
+	public Player(CardGame cardGame, int playerNumber, String playerLogPath, String deckLogPath)
+	{
+		this.lock = new Object();
+		this.cardGame = cardGame;
+		this.playerNumber = playerNumber;
+		this.hand = new ArrayList<Card>();
+
+		this.playerLogPath = playerLogPath;
+		this.deckLogPath = deckLogPath;
+	}
 
 	/**
 	 * @return the reference to the current player's hand.
@@ -149,18 +163,26 @@ public class Player implements Runnable
 
 		// Choose a card index in random, then move it to the right deck, and take the card picked up from the left.
 		int cardRemoveIndex = (int) Math.floor(Math.random() * tempCards.size());
-		Card removedCard = tempCards.remove(cardRemoveIndex);
-		if (removedCard != null)
+		try 
 		{
+			Card removedCard = tempCards.remove(cardRemoveIndex);
+			
+			if (removedCard != null)
+			{
 //			System.out.println("    " + this + " has discards a " + takenCard + " to " + deckRight);
-			CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
-			remFromHand(removedCard);
-			deckRight.addCard(removedCard);
-
+				CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
+				remFromHand(removedCard);
+				deckRight.addCard(removedCard);
+				
 //			System.out.println("[!] " + this + " puts " + takenCard + " into their hand.");
-			CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
-			addToHand(takenCard);
+				CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
+				addToHand(takenCard);
+			}
+		} catch (IndexOutOfBoundsException e)
+		{
+			throw new HandEmptyException("Hand is empty");
 		}
+		
 //		System.out.println("    " + this + " current hand is " + CardGameUtil.listToString(this.hand));
 		CardGameUtil.appendToFile(this.playerLogPath, this + " current hand is " + CardGameUtil.collectionToString(this.hand));
 	}
