@@ -155,8 +155,8 @@ public class PlayerTest {
 		CardDeck rightDeck = new CardDeck(playerNum+1);
 		leftDeck.addCard(card);
 		
-		String playerLogPath = "Tests/Output/player" + playerNum + "_output.txt";
-		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_output.txt";
+		String playerLogPath = "Tests/Output/player" + playerNum + "_HandEmpty_output.txt";
+		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_HandEmpty_output.txt";
 		
 		Player player = new Player(cardGame, playerNum, playerLogPath, leftDeckLogPath);
 		try 
@@ -184,8 +184,8 @@ public class PlayerTest {
 		CardDeck leftDeck = new CardDeck(playerNum);
 		CardDeck rightDeck = new CardDeck(playerNum+1);
 		
-		String playerLogPath = "Tests/Output/player" + playerNum + "_output.txt";
-		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_output.txt";
+		String playerLogPath = "Tests/Output/player" + playerNum + "_DeckEmpty_output.txt";
+		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_DeckEmpty_output.txt";
 		
 		Player player = new Player(cardGame, playerNum, playerLogPath, leftDeckLogPath);
 		try 
@@ -217,8 +217,8 @@ public class PlayerTest {
 		CardDeck rightDeck = new CardDeck(playerNum+1);
 		leftDeck.addCard(card);
 		
-		String playerLogPath = "Tests/Output/player" + playerNum + "_output.txt";
-		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_output.txt";
+		String playerLogPath = "Tests/Output/player" + playerNum + "_TakeTurn_output.txt";
+		String leftDeckLogPath = "Tests/Output/deck" + playerNum + "_TakeTurn_output.txt";
 		
 		Player player = new Player(cardGame, playerNum, playerLogPath, leftDeckLogPath);
 		try
