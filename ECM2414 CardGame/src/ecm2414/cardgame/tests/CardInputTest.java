@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import ecm2414.cardgame.Card;
 import ecm2414.cardgame.CardGame;
@@ -32,7 +32,7 @@ public class CardInputTest
 	 */
 	
 	@Test
-	void testSetupInputValid()
+	public void testSetupInputValid()
 	{
 		String testInput = "2\nTests/validTestPack.txt";
 		int[] packValidTest = new int[] {5, 3, 2, 7, 1, 7, 4, 8, 65, 43, 3, 385, 34, 3, 1, 2};
@@ -61,7 +61,7 @@ public class CardInputTest
 	//TODO: FINISH TESTS.
 
 	@Test
-	void testSetupInputInvalid()
+	public void testSetupInputInvalid()
 	{
 		String testInput = "2\nTests/invalidTestPack.txt";
 
@@ -83,7 +83,7 @@ public class CardInputTest
 
 	
 	@Test
-	void testSetupInputInvalidSize()
+	public void testSetupInputInvalidSize()
 	{
 		String testInput = "2\nTests/invalidSizeTestPack.txt";
 		
@@ -104,7 +104,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testSetupInputInvalidSize2()
+	public void testSetupInputInvalidSize2()
 	{
 		String testInput = "2\nTests/invalidSizeTestPack2.txt";
 		
@@ -125,7 +125,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testSetupInputValidOnePlayer()
+	public void testSetupInputValidOnePlayer()
 	{
 		String testInput = "1\nTests/validTestPackOnePlayer.txt";
 
@@ -146,7 +146,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testLoadPackValid()
+	public void testLoadPackValid()
 	{
 		CardGame cardGame = new CardGame();
 		int[] packValidTest = new int[] {5, 3, 2, 7, 1, 7, 4, 8, 65, 43, 3, 385, 34, 3, 1, 2};
@@ -173,7 +173,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testLoadPackInvalid()
+	public void testLoadPackInvalid()
 	{
 		CardGame cardGame = new CardGame();
 		int testPlayers = 2;
@@ -194,7 +194,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testLoadPackInvalidSize()
+	public void testLoadPackInvalidSize()
 	{
 		CardGame cardGame = new CardGame();
 		int testPlayers = 2;
@@ -215,7 +215,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testLoadPackInvalidSize2()
+	public void testLoadPackInvalidSize2()
 	{
 		CardGame cardGame = new CardGame();
 		int testPlayers = 2;
@@ -236,7 +236,7 @@ public class CardInputTest
 	}
 	
 	@Test
-	void testLoadPackValidOnePlayer()
+	public void testLoadPackValidOnePlayer()
 	{
 		CardGame cardGame = new CardGame();
 		int testPlayers = 1;

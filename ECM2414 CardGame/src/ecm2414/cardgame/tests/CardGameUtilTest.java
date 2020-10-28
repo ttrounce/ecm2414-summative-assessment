@@ -1,7 +1,7 @@
 package ecm2414.cardgame.tests;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,7 +14,7 @@ import java.lang.Thread.State;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import ecm2414.cardgame.Card;
 import ecm2414.cardgame.CardGameUtil;
@@ -24,7 +24,7 @@ public class CardGameUtilTest
 	public static final String APPEND_TEST_PATH = "Tests/append_test.txt";
 	
 	@Test
-	void testClearFile()
+	public void testClearFile()
 	{
 		try(BufferedWriter writer = new BufferedWriter(new FileWriter(APPEND_TEST_PATH)))
 		{
@@ -49,7 +49,7 @@ public class CardGameUtilTest
 	}
 	
 	@Test
-	void testAppendToFileOnce()
+	public void testAppendToFileOnce()
 	{
 		// Clean file before test.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
@@ -74,7 +74,7 @@ public class CardGameUtilTest
 	}
 	
 	@Test
-	void testAppendToFileTwice()
+	public void testAppendToFileTwice()
 	{
 		// Clean file before test.
 		CardGameUtil.clearFile(APPEND_TEST_PATH);
@@ -103,7 +103,7 @@ public class CardGameUtilTest
 	}
 	
 	@Test
-	void testCollectionToString()
+	public void testCollectionToString()
 	{
 		List<Card> testCards = Arrays.asList(new Card[] {new Card(2), new Card(5), new Card(0), new Card(1), new Card(3)}); 
 		String expectedString = "2 5 0 1 3";
@@ -113,7 +113,7 @@ public class CardGameUtilTest
 	}
 	
 	@Test
-	void testCollectionToStringEmpty()
+	public void testCollectionToStringEmpty()
 	{
 		List<Card> testCards = Arrays.asList(new Card[] {}); 
 		String expectedString = "";
@@ -123,7 +123,7 @@ public class CardGameUtilTest
 	}
 	
 	@Test
-	void testNotifyLock()
+	public void testNotifyLock()
 	{
 		Object lock = new Object();
 				

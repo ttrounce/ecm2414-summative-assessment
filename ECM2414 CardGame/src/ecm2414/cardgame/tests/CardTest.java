@@ -1,15 +1,15 @@
 package ecm2414.cardgame.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import ecm2414.cardgame.Card;
 
 public class CardTest {
 		
 	@Test
-	void testCard()
+	public void testCard()
 	{
 		int denom = 1;
 		Card card = new Card(denom);

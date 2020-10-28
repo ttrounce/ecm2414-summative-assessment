@@ -198,7 +198,7 @@ public class Player implements Runnable
 		/*
 		 * While there is no winners to the card game...
 		 */
-		while (!cardGame.playerHasWon.get())
+		while (!cardGame.playerHasWon.get() || !cardGame.shouldShutdown.get())
 		{
 			int previousPlayerNumber = (playerNumber - 1) - 1 % cardGame.getPlayerCount();
 			if (previousPlayerNumber < 0)
@@ -218,6 +218,7 @@ public class Player implements Runnable
 			} catch (InterruptedException e)
 			{
 				// Restart the while block, waiting again.
+				e.printStackTrace();
 				continue;
 			}
 
@@ -263,18 +264,18 @@ public class Player implements Runnable
 			}
 
 			// Check if it has won after.
-			if (!cardGame.playerHasWon.get() && this.hasWon())
+			if (this.hasWon())
 			{
 				System.out.println("Player " + playerNumber + " has won!");
 				CardGameUtil.appendToFile(this.playerLogPath, this + " wins");
 				cardGame.playerHasWon.set(true);
 				cardGame.winningPlayer.set(this);
-				;
 				break;
 			}
 			// Notify any threads waiting on this player that it has finished.
 			CardGameUtil.notifyLock(this.lock);
 		}
+		
 		// Notify any threads that have just exited the while loop (either because they won or another player has won) that they can continue.
 		CardGameUtil.notifyLock(this.lock);
 
