@@ -66,6 +66,8 @@ public class CardGameUtil {
 			sb.append(obj);
 			sb.append(" ");
 		}
+		if(sb.toString().isEmpty())
+			return "";
 		return sb.substring(0, sb.length() - 1).toString();
 	}
 
