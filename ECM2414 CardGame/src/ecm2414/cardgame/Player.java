@@ -72,7 +72,7 @@ public class Player implements Runnable
 	 * @throws HandFullException when the hand is already at a full capacity of
 	 *                           {@value #MAX_CARDS}.
 	 */
-	public void addToHand(Card card) throws HandFullException
+	public synchronized void addToHand(Card card) throws HandFullException
 	{
 		if (this.getNumberOfCards() < MAX_CARDS)
 		{
@@ -91,7 +91,7 @@ public class Player implements Runnable
 	 * @param card the card which the player wants to remove.
 	 * @throws HandEmptyException when the hand is already empty.
 	 */
-	public void remFromHand(Card card) throws HandEmptyException
+	public synchronized void remFromHand(Card card) throws HandEmptyException
 	{
 		if (this.numberOfCards <= 0)
 		{
@@ -181,12 +181,12 @@ public class Player implements Runnable
 
 			if (removedCard != null)
 			{
-				CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
 				remFromHand(removedCard);
 				deckRight.addCard(removedCard);
+				CardGameUtil.appendToFile(this.playerLogPath, this + " discards a " + removedCard + " to " + deckRight);
 
-				CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
 				addToHand(takenCard);
+				CardGameUtil.appendToFile(this.playerLogPath, this + " puts " + takenCard + " into their hand");
 			}
 		} catch (IndexOutOfBoundsException e)
 		{
@@ -202,7 +202,7 @@ public class Player implements Runnable
 		// Clean the files.
 		CardGameUtil.clearFile(this.deckLogPath);
 		CardGameUtil.clearFile(this.playerLogPath);
-		CardGameUtil.appendToFile(this.playerLogPath, this + " initial hand: " + this.hand);
+		CardGameUtil.appendToFile(this.playerLogPath, this + " initial hand is " + CardGameUtil.collectionToString(this.hand));
 
 		/*
 		 * While there is no winners to the card game...
@@ -241,8 +241,8 @@ public class Player implements Runnable
 			}
 
 			/*
-			 * If this player has won, aka - they have 4 of the same card, append it to file
-			 * and tell set the flags. Then break out of the while loop.
+			 * If this player has won (they have 4 of the same card), append it to file
+			 * and set the flags. Then break out of the while loop.
 			 */
 			if (this.hasWon())
 			{

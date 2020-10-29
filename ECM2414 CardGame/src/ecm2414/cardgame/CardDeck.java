@@ -49,7 +49,7 @@ public class CardDeck
 	 * 
 	 * @param card card to add.
 	 */
-	public void addCard(Card card)
+	public synchronized void addCard(Card card)
 	{
 		deck.offer(card);
 		this.numberOfCards++;
@@ -61,7 +61,7 @@ public class CardDeck
 	 * @param card card to remove.
 	 * @throws DeckEmptyException thrown when the deck is empty.
 	 */
-	public void removeCard(Card card) throws DeckEmptyException
+	public synchronized void removeCard(Card card) throws DeckEmptyException
 	{
 		if (this.getNumberOfCards() <= 0)
 		{
@@ -78,7 +78,7 @@ public class CardDeck
 	 * @return the card at the front of the deck.
 	 * @throws DeckEmptyException thrown when the deck is empty.
 	 */
-	public Card takeCard() throws DeckEmptyException
+	public synchronized Card takeCard() throws DeckEmptyException
 	{
 		if (this.getNumberOfCards() <= 0)
 		{
