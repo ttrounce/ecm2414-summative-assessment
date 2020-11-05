@@ -1,4 +1,4 @@
-package ecm2414.cardgame.tests;
+package ecm2414.cardgame;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
