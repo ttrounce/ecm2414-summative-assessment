@@ -9,8 +9,6 @@ import java.lang.reflect.Field;
 
 import org.junit.Test;
 
-import ecm2414.cardgame.Card;
-import ecm2414.cardgame.CardDeck;
 import ecm2414.cardgame.exceptions.DeckEmptyException;
 
 public class CardDeckTest

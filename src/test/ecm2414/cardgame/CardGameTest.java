@@ -12,9 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ecm2414.cardgame.CardDeck;
-import ecm2414.cardgame.CardGame;
-import ecm2414.cardgame.Player;
 import ecm2414.cardgame.exceptions.NotEnoughCardsException;
 import ecm2414.cardgame.exceptions.NotEnoughPlayersException;
 

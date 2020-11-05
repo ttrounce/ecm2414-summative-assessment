@@ -25,3 +25,6 @@ hs_err_pid*
 *.project
 *.classpath
 /bin/
+/generated/
+/Output/
+/Tests/Output
